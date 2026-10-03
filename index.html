@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#1e3a5f">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Empower C1 · Advanced English Platform</title>
-<link rel="manifest" href='data:application/manifest+json,{"name":"Empower%20C1","short_name":"Empower%20C1","start_url":".","display":"standalone","background_color":"%23f8fafc","theme_color":"%231e3a5f"}'>
+<title>Empower B1 · Intermediate English Platform</title>
+<link rel="manifest" href='data:application/manifest+json,{"name":"Empower%20B1","short_name":"Empower%20B1","start_url":".","display":"standalone","background_color":"%23f8fafc","theme_color":"%231e3a5f"}'>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = {
@@ -44,11 +44,11 @@ body { font-family: Inter, system-ui, sans-serif; }
 <header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
     <div class="flex items-center gap-2.5 min-w-0">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#1e3a5f] to-[#2b6cb0] flex items-center justify-center text-white font-black shadow-sm text-sm shrink-0">C1</div>
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#1e3a5f] to-[#2b6cb0] flex items-center justify-center text-white font-black shadow-sm text-sm shrink-0">B1</div>
       <div class="min-w-0">
         <div class="flex items-center gap-2">
-          <h1 class="text-base font-bold text-slate-900 leading-none tracking-tight">Empower C1</h1>
-          <span class="px-1.5 py-0.5 text-[10px] font-semibold bg-sky-50 text-sky-800 border border-sky-200 rounded">Advanced</span>
+          <h1 class="text-base font-bold text-slate-900 leading-none tracking-tight">Empower B1</h1>
+          <span class="px-1.5 py-0.5 text-[10px] font-semibold bg-sky-50 text-sky-800 border border-sky-200 rounded">Intermediate</span>
         </div>
         <span class="text-xs text-slate-500 font-medium hidden sm:inline">Course Overview</span>
       </div>
@@ -91,13 +91,13 @@ body { font-family: Inter, system-ui, sans-serif; }
     <div class="bg-gradient-to-r from-sky-50 via-blue-50/50 to-slate-50 border border-sky-100/80 p-6 sm:p-8 rounded-2xl relative overflow-hidden shadow-sm">
       <div class="max-w-2xl relative z-10">
         <span class="inline-block px-3 py-1 bg-sky-100/80 text-sky-900 text-xs font-semibold rounded-full mb-3 border border-sky-200/60">Cambridge English Empower</span>
-        <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">Empower C1 Interactive Course</h2>
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">Empower B1 Interactive Course</h2>
         <p class="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed">
           Open a unit, choose a lesson, and practise with live checking, audio, and writing feedback.
         </p>
         <div class="flex flex-wrap gap-2 mt-4">
           <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/80 border border-slate-200 text-slate-600">12 units</span>
-          <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/80 border border-slate-200 text-slate-600">A · B · C · D · Review · Review Ext · Reading</span>
+          <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/80 border border-slate-200 text-slate-600">A · B · C · D · Review · Review Ext · Reading · Documentary Video</span>
         </div>
       </div>
     </div>
@@ -120,7 +120,7 @@ body { font-family: Inter, system-ui, sans-serif; }
   <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100 space-y-4">
     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
       <div class="flex items-center gap-2">
-        <div class="p-1.5 bg-sky-50 text-sky-700 rounded-lg font-bold text-xs">Empower C1</div>
+        <div class="p-1.5 bg-sky-50 text-sky-700 rounded-lg font-bold text-xs">Empower B1</div>
         <h3 class="font-bold text-slate-800 text-sm sm:text-base">Results Report</h3>
       </div>
       <button type="button" onclick="closeReportModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold leading-none">&times;</button>
@@ -139,10 +139,11 @@ body { font-family: Inter, system-ui, sans-serif; }
 </div>
 <script>
 const LETTERS = ['A','B','C','D'];
-/** Extra slots after A–D + R: Review Extension (RE), Reading (Rd) */
+/** Extra slots after A–D + R: Review Extension (RE), Reading (Rd), Documentary Video (DV) */
 const EXTRA_SLOTS = [
   { slot: 'RE', codeSuffix: 'RE', title: 'Review Extension' },
-  { slot: 'Rd', codeSuffix: 'Rd', title: 'Reading' }
+  { slot: 'Rd', codeSuffix: 'Rd', title: 'Reading' },
+  { slot: 'DV', codeSuffix: 'DV', title: 'Documentary Video' }
 ];
 const UNIT_TITLES = { 1: 'Language & learning' };
 const LESSON_TITLES = {
@@ -151,7 +152,8 @@ const LESSON_TITLES = {
   '1C': "I'd much rather…",
   '1R': 'Unit 1 Review',
   '1RE': 'Unit 1 Review Extension',
-  '1Rd': 'Unit 1 Reading'
+  '1Rd': 'Unit 1 Reading',
+  '1DV': 'Unit 1 Documentary Video'
 };
 let expandedUnitId = 1;
 let filter = 'all';
@@ -181,6 +183,22 @@ function parseLessonFile(name) {
     const unit = +m[1];
     return { unit, slot: 'Rd', code: unit + 'Rd', title: titleFromName(name, unit + 'Rd'), file: name };
   }
+  // Unit_N_Documentary_Video / NDocumentary / N_Documentary / NDV / Documentary Video
+  m = name.match(/^Unit_?(\d{1,2})_?Documentary[_\s-]?Video(?:[_.].*)?\.html$/i);
+  if (m) {
+    const unit = +m[1];
+    return { unit, slot: 'DV', code: unit + 'DV', title: titleFromName(name, unit + 'DV'), file: name };
+  }
+  m = name.match(/^Unit_?(\d{1,2})_?Documentary(?:[_.].*)?\.html$/i);
+  if (m) {
+    const unit = +m[1];
+    return { unit, slot: 'DV', code: unit + 'DV', title: titleFromName(name, unit + 'DV'), file: name };
+  }
+  m = name.match(/^(\d{1,2})(?:DV|Documentary)(?:[_.-].*)?\.html$/i);
+  if (m) {
+    const unit = +m[1];
+    return { unit, slot: 'DV', code: unit + 'DV', title: titleFromName(name, unit + 'DV'), file: name };
+  }
   // Review (must come after Review Extension patterns)
   m = name.match(/^Unit_?(\d{1,2})_?Review(?:[_.].*)?\.html$/i);
   if (m) {
@@ -203,13 +221,15 @@ function parseLessonFile(name) {
 function titleFromName(filename, code) {
   const bare = filename.replace(/\.html$/i, '');
   if (code && LESSON_TITLES[code] && new RegExp('^' + code + '$', 'i').test(bare)) return LESSON_TITLES[code];
-  let t = bare.replace(/^\d{1,2}(?:RE|Rd|Reading|[A-DR])/i, '').replace(/^Unit_?\d{1,2}_?(?:Review[_\s-]?Ext(?:ension)?|Review|Reading)/i, '')
+  let t = bare.replace(/^\d{1,2}(?:RE|Rd|Reading|DV|Documentary|[A-DR])/i, '')
+    .replace(/^Unit_?\d{1,2}_?(?:Review[_\s-]?Ext(?:ension)?|Review|Reading|Documentary[_\s-]?Video|Documentary)/i, '')
     .replace(/^[_.\-\s]+/, '').replace(/_?Interactive$/i, '').replace(/_?Extension$/i, '')
     .replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim();
   if (!t) {
     if (code && LESSON_TITLES[code]) return LESSON_TITLES[code];
     if (code && /RE$/.test(code)) return 'Review Extension';
     if (code && /Rd$/.test(code)) return 'Reading';
+    if (code && /DV$/.test(code)) return 'Documentary Video';
     if (code && /R$/.test(code)) return 'Unit Review';
     if (code && /[A-D]$/.test(code)) return 'Lesson ' + code.slice(-1);
     return 'Lesson';
@@ -286,7 +306,7 @@ function readyCount() {
   return n;
 }
 function saveStudentName(name) {
-  localStorage.setItem('empowerC1_student', name);
+  localStorage.setItem('empowerB1_student', name);
 }
 function showToast(msg) {
   const toast = document.getElementById('toast');
@@ -305,7 +325,7 @@ function openProgressReport() {
 function closeReportModal() {
   document.getElementById('reportModal').classList.add('hidden');
 }
-const PROGRESS_KEY = 'empowerC1_lessonProgress';
+const PROGRESS_KEY = 'empowerB1_lessonProgress';
 function readProgressMap() {
   try { return JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{}') || {}; }
   catch (_) { return {}; }
@@ -416,7 +436,7 @@ function renderAccordion() {
   updateHeaderProgress();
 }
 async function init() {
-  const saved = localStorage.getItem('empowerC1_student');
+  const saved = localStorage.getItem('empowerB1_student');
   if (saved) document.getElementById('studentNameInput').value = saved;
   const status = document.getElementById('status');
   const LOCAL_FALLBACK = ['1A.html', '1B.html', '1C.html', '1R.html', '1RE.html', '1Rd.html'];
