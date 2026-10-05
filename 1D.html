@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#1e3a5f">
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRW1wb3dlciBDMXAg4oCTIFVuaXQgMSIsInNob3J0X25hbWUiOiJFbXBvd2VyIEMxIiwidGhlbWVfY29sb3IiOiIjMWUzYTVmIiwiYmFja2dyb3VuZF9jb2xvciI6IiMxZTNhNWYiLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsInN0YXJ0X3VybCI6Ii4ifQ==">
+<title>Empower C1 1D · Skills for Writing</title>
+<style>
+:root {
+  --primary:#1e3a5f; --primary2:#2b6cb0; --accent:#3182ce;
+  --ok:#38a169; --okbg:#f0fff4; --bad:#e53e3e; --badbg:#fff5f5;
+  --bg:#f0f4f8; --card:#fff; --border:#e2e8f0; --muted:#718096;
+  --sidebar-w:220px; --topbar-h:36px;
+  --radius:10px; --shadow:0 1px 3px rgba(0,0,0,.06);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,system-ui,sans-serif;background:var(--bg);color:#1a202c;line-height:1.55;-webkit-text-size-adjust:100%}
+body{
+  display:grid;
+  grid-template-columns:var(--sidebar-w) minmax(0,1fr);
+  grid-template-rows:var(--topbar-h) minmax(0,1fr);
+  grid-template-areas:"side top" "side main";
+  overflow:hidden;
+  min-height:100dvh;
+  padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+}
+#topbar{
+  grid-area:top;
+  background:linear-gradient(135deg,#1e3a5f,#2b6cb0);
+  color:#fff;
+  display:flex;align-items:center;gap:.45rem;
+  padding:0 .65rem;z-index:100;
+  height:var(--topbar-h);min-height:var(--topbar-h);
+  box-shadow:0 1px 4px rgba(0,0,0,.12);min-width:0;
+}
+#topTitle{font-size:.8rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;margin:0;color:#fff}
+#menuBtn{
+  display:none;background:rgba(255,255,255,.15);border:none;color:#fff;
+  width:32px;height:32px;border-radius:8px;font-size:1.1rem;cursor:pointer;
+  align-items:center;justify-content:center;
+}
+#menuBtn svg{fill:#fff;width:18px;height:18px}
+#sidebar{
+  grid-area:side;background:#16324f;color:#fff;
+  overflow-y:auto;padding:.6rem 0;-webkit-overflow-scrolling:touch;min-height:0;
+  display:flex;flex-direction:column;
+}
+.sidebar-brand{padding:0 .85rem .5rem;font-size:.75rem;font-weight:700;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:.35rem;line-height:1.25;color:#fff}
+.sidebar-brand .title{font-size:.78rem;font-weight:700;color:#fff}
+.sidebar-student{padding:.5rem .85rem .65rem;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:.35rem}
+.sidebar-student label{display:block;font-size:.68rem;color:#90cdf4;margin-bottom:.25rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.sidebar-student input{width:100%;padding:.35rem .5rem;border:none;border-radius:6px;font-size:.82rem;margin-bottom:.4rem;background:#fff;color:#1a202c}
+#resultsBtn{width:100%;padding:.4rem .5rem;border-radius:6px;font-size:.75rem;background:#ed8936;color:#1a202c;border:none;font-weight:700;cursor:pointer;margin:0}
+#resultsBtn:hover{background:#dd6b20}
+.progress-wrap{padding:.35rem .85rem .5rem}
+.progress-label{font-size:.68rem;color:#90cdf4;margin-bottom:.2rem;font-weight:600}
+.progress-bar-bg{height:8px;background:rgba(255,255,255,.15);border-radius:4px;overflow:hidden}
+.progress-bar-fg{height:100%;background:#38a169;border-radius:4px;width:0%;transition:width .3s}
+.progress-pct{font-size:.72rem;color:#a0aec0;margin-top:.15rem}
+.sidebar-nav{flex:1;overflow-y:auto;padding:0 0 .5rem}
+.nav-group-title{font-size:.62rem;text-transform:uppercase;letter-spacing:.07em;color:#90cdf4;padding:.55rem 1rem .2rem;font-weight:600}
+.nav-link{display:flex;align-items:center;gap:.4rem;color:#bee3f8;text-decoration:none;padding:.38rem .85rem;font-size:.8rem;font-weight:500;border-left:3px solid transparent;transition:all .15s;cursor:pointer}
+.nav-link:hover,.nav-link.active{background:rgba(49,130,206,.25);color:#fff;border-left-color:#63b3ed}
+.nav-link .nav-num{width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.1);display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0}
+.nav-link.active .nav-num{background:#3182ce}
+#main{grid-area:main;overflow:hidden;display:flex;flex-direction:column;background:var(--bg);min-width:0;min-height:0}
+#slides{flex:1;overflow:hidden;position:relative}
+.slide{display:none;position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:.55rem .7rem 1.2rem}
+.slide.active{display:block}
+.slide-inner{max-width:820px;margin:0 auto}
+.slide-nav{flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:.6rem;padding:.45rem .7rem calc(.45rem + var(--safe-bottom));background:#fff;border-top:1px solid var(--border)}
+.slide-nav button{background:var(--accent);color:#fff;border:none;padding:.4rem .85rem;border-radius:8px;font-weight:600;font-size:.82rem;cursor:pointer;min-width:72px}
+.slide-nav button:disabled{opacity:.4;cursor:not-allowed}
+.slide-nav .counter{font-size:.8rem;color:var(--muted);font-weight:600;min-width:48px;text-align:center}
+.section-header{display:flex;align-items:center;gap:.5rem;margin-bottom:.45rem;padding-bottom:.3rem;border-bottom:2px solid var(--accent)}
+.section-header .num{width:22px;height:22px;border-radius:6px;background:var(--accent);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700}
+.section-header h2{color:var(--primary);font-size:1.05rem;font-weight:700;margin:0;border:none;padding:0}
+.page-tag{display:inline-block;background:#ebf8ff;color:var(--accent);font-size:.7rem;font-weight:700;padding:.15rem .55rem;border-radius:20px;margin-bottom:.5rem}
+.skill-box,.tip,.note{font-size:.82rem;color:#744210;background:#fffff0;border-left:3px solid #d69e2e;padding:.4rem .7rem;margin:.55rem 0;border-radius:0 8px 8px 0}
+.skill-box{background:#ebf8ff;border-left-color:var(--accent);color:#2c5282}
+.exercise{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:.65rem .8rem;margin:.55rem 0}
+.exercise-title{font-weight:700;color:var(--primary);margin-bottom:.45rem;font-size:.92rem}
+.exercise-title .letter{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:6px;background:var(--accent);color:#fff;font-size:.7rem;margin-right:.25rem}
+p,li{margin-bottom:.35rem;font-size:.92rem}
+ul,ol{padding-left:1.2rem;margin-bottom:.5rem}
+input[type=text],select,textarea{font-family:inherit;font-size:16px;padding:.4rem .6rem;border:2px solid #cbd5e0;border-radius:8px;max-width:100%;background:#fff;transition:border-color .12s,box-shadow .12s}
+input[type=text]:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(49,130,206,.15)}
+input.ok,select.ok,input.live-ok,select.live-ok{border-color:var(--ok)!important;background:var(--okbg)!important}
+input.bad,select.bad,input.live-bad,select.live-bad{border-color:var(--bad)!important;background:var(--badbg)!important}
+.btn-row{display:flex;flex-wrap:wrap;gap:.3rem;align-items:center;margin-top:.45rem}
+button.ex-btn{display:inline-flex;align-items:center;gap:.25rem;background:var(--accent);color:#fff;border:none;padding:.42rem .9rem;border-radius:8px;font-size:.84rem;font-weight:600;cursor:pointer;margin:.15rem .15rem .15rem 0;transition:background .15s}
+.btn-check{background:var(--ok)}.btn-check:hover{background:#2f855a}
+.btn-show{background:#805ad5}.btn-show:hover{background:#6b46c1}
+.btn-clear{background:#718096}.btn-clear:hover{background:#4a5568}
+.btn-write{background:transparent;color:#805ad5;border:2px solid #805ad5;padding:.38rem .8rem}
+.btn-write:hover{background:#faf5ff}
+.score-pill{font-weight:700;font-size:.78rem;padding:.2rem .55rem;border-radius:20px;background:#edf2f7;color:var(--muted)}
+.msg-card{background:#fff;border:1px solid #bee3f8;border-radius:12px;padding:.7rem .9rem;margin:.4rem 0;box-shadow:var(--shadow);position:relative}
+.msg-card .send{position:absolute;right:.6rem;bottom:.4rem;font-size:.65rem;font-weight:700;color:#2b6cb0;background:#ebf8ff;padding:.1rem .4rem;border-radius:4px}
+.email-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem;margin:.6rem 0;box-shadow:var(--shadow)}
+.email-card .from{font-size:.75rem;color:var(--muted);margin-bottom:.3rem}
+.email-card .body{font-size:.9rem;white-space:pre-wrap}
+.hl{background:#c6f6d5;color:#22543d;padding:0 .15em;border-radius:3px}
+.two-col{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.75rem}
+.pair-box{background:#fff;border:1px solid var(--border);border-radius:8px;padding:.6rem .8rem;margin:.4rem 0}
+.pair-box .pair-label{font-weight:700;color:var(--primary);margin-bottom:.3rem}
+.speech-bubble{background:#ebf8ff;border-radius:12px;padding:.5rem .8rem;margin:.3rem 0;font-size:.88rem;border:1px solid #bee3f8}
+.lookup-help{font-size:.8rem;color:var(--muted);background:#f7fafc;border:1px solid var(--border);border-radius:8px;padding:.5rem .7rem;margin:.5rem 0;cursor:pointer}
+.lookup-help summary{font-weight:600;color:var(--primary);cursor:pointer}
+#modalOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center;padding:1rem}
+#modalOverlay.show{display:flex}
+.modal{background:#fff;border-radius:12px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;padding:1.2rem;box-shadow:0 10px 40px rgba(0,0,0,.2)}
+.modal h3{margin-bottom:.6rem;color:var(--primary)}
+.modal table{width:100%;border-collapse:collapse;font-size:.85rem;margin:.5rem 0}
+.modal th,.modal td{border:1px solid var(--border);padding:.35rem .5rem;text-align:left}
+.modal th{background:var(--primary2);color:#fff}
+.modal-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.8rem}
+.modal-actions button{padding:.4rem .8rem;border-radius:8px;border:none;font-weight:600;cursor:pointer}
+#wordPopup{display:none;position:fixed;z-index:1100;background:#fff;border:1px solid var(--border);border-radius:10px;padding:.7rem .9rem;box-shadow:0 8px 24px rgba(0,0,0,.15);max-width:280px;font-size:.88rem}
+#wordPopup.show{display:block}
+#wordPopup .wp-word{font-weight:700;color:var(--primary);font-size:1rem}
+#wordPopup .wp-pos{color:var(--muted);font-size:.78rem;font-style:italic}
+#wordPopup .wp-def{margin-top:.25rem}
+#wordPopup .wp-ex{margin-top:.2rem;color:#4a5568;font-size:.82rem}
+.wf-panel{display:none;background:#faf5ff;border:1px solid #d6bcfa;border-radius:8px;padding:.6rem;margin-top:.4rem;font-size:.85rem}
+.wf-panel.show{display:block}
+.wf-issue{margin-bottom:.4rem;padding-bottom:.35rem;border-bottom:1px solid #e9d8fd}
+.wf-issue .what{font-weight:600;color:#553c9a}
+.wf-issue .why{color:#6b46c1;font-size:.8rem}
+.try{display:inline-block;background:#e9d8fd;color:#553c9a;padding:.1rem .4rem;border-radius:4px;margin:.1rem;cursor:pointer;font-size:.8rem}
+.audio-note{font-size:.82rem;color:#744210;background:#fffff0;border-left:3px solid #d69e2e;padding:.4rem .7rem;margin:.4rem 0;border-radius:0 8px 8px 0}
+@media(max-width:720px){
+  body{grid-template-columns:1fr;grid-template-rows:var(--topbar-h) 1fr;grid-template-areas:"top" "main"}
+  #sidebar{position:fixed;left:0;top:0;bottom:0;width:min(280px,85vw);z-index:200;transform:translateX(-100%);transition:transform .25s}
+  #sidebar.open{transform:translateX(0)}
+  #menuBtn{display:inline-flex}
+  .sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:150}
+  .sidebar-backdrop.show{display:block}
+}
+</style>
+</head>
+<body>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+<aside id="sidebar">
+  <div class="sidebar-brand">
+    <div class="title">1D · Skills for Writing</div>
+  </div>
+  <div style="padding:.35rem .85rem">
+    <a href="index.html" style="color:#90cdf4;font-size:.8rem;text-decoration:none">← Main page</a>
+  </div>
+  <div class="sidebar-student">
+    <label>Student name</label>
+    <input type="text" id="studentName" placeholder="Your name" autocomplete="name">
+    <button id="resultsBtn" type="button">Results Report</button>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-label">Your progress</div>
+    <div class="progress-bar-bg"><div class="progress-bar-fg" id="progressBar"></div></div>
+    <div class="progress-pct" id="progressPct">0%</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-group-title">Lesson</div>
+    <a class="nav-link active" data-slide="0"><span class="nav-num">1</span> Speaking &amp; Listening</a>
+    <a class="nav-link" data-slide="1"><span class="nav-num">2</span> Reading</a>
+    <a class="nav-link" data-slide="2"><span class="nav-num">3</span> Writing Skills</a>
+    <a class="nav-link" data-slide="3"><span class="nav-num">4</span> Writing</a>
+    <a class="nav-link" data-slide="4"><span class="nav-num">+</span> Extra Reading</a>
+  </nav>
+</aside>
+
+<header id="topbar">
+  <button id="menuBtn" type="button" aria-label="Menu">
+    <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+  </button>
+  <h1 id="topTitle">1D · Skills for Writing</h1>
+</header>
+
+<main id="main">
+  <div id="slides">
+
+    <!-- ========== SLIDE 0: Speaking & Listening ========== -->
+    <div class="slide active" data-slide="0">
+      <div class="slide-inner">
+        <span class="page-tag">Pages 14–15</span>
+        <div class="section-header"><span class="num">1</span><h2>Speaking and Listening</h2></div>
+        <p style="font-size:.88rem;color:var(--muted);margin-bottom:.6rem">Learn to write a personal email · Correcting mistakes</p>
+
+        <div class="exercise" data-ex="1a">
+          <div class="exercise-title"><span class="letter">a</span> Read messages 1–3 and answer the questions.</div>
+          <div class="msg-card">1. I can’t seem to <span class="hl">get in touch with</span> you. Call me! <span class="send">SEND</span></div>
+          <div class="msg-card">2. Did you <span class="hl">get</span> my last text? <span class="send">SEND</span></div>
+          <div class="msg-card">3. Are you OK? We <span class="hl">haven’t heard from</span> you for a long time. <span class="send">SEND</span></div>
+          <p style="margin-top:.5rem"><strong>1</strong> What do the highlighted phrases mean?</p>
+          <p>get in touch with = <input type="text" data-answer="contact|make contact with|communicate with|reach" style="width:min(220px,90%)" placeholder="meaning"></p>
+          <p>get (a text) = <input type="text" data-answer="receive|got" style="width:min(160px,80%)" placeholder="meaning"></p>
+          <p>haven’t heard from = <input type="text" data-answer="haven’t had news from|no contact from|haven’t received news from|no news from" style="width:min(260px,95%)" placeholder="meaning"></p>
+          <p style="margin-top:.4rem"><strong>2</strong> Do you ever send or receive these kinds of messages? Who to/from? Why?</p>
+          <textarea rows="2" placeholder="Your answer…" style="width:100%"></textarea>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/3</span>
+          </div>
+        </div>
+
+        <div class="exercise" data-ex="1b">
+          <div class="exercise-title"><span class="letter">b</span> Listen to Nina and Chris talking about keeping in touch with friends and family.</div>
+          <div class="audio-note">Audio 01.21 – audio file not supplied in this build. Use the questions in 1c for discussion or class audio.</div>
+          <p>Who is better at keeping in touch: Nina or Chris?</p>
+          <input type="text" data-answer="Chris|chris" style="width:min(140px,70%)" placeholder="Nina / Chris">
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/1</span>
+          </div>
+        </div>
+
+        <div class="exercise" data-ex="1c">
+          <div class="exercise-title"><span class="letter">c</span> Listen again and answer the questions.</div>
+          <div class="audio-note">Answers for 1c require the teacher key / audio transcript (not supplied). Write your answers for class discussion.</div>
+          <ol style="padding-left:1.3rem">
+            <li>Why doesn’t Nina send many emails? <input type="text" style="width:min(280px,90%)" placeholder="Your answer"></li>
+            <li>Why does Chris call his mother so often? <input type="text" style="width:min(280px,90%)" placeholder="Your answer"></li>
+            <li>How often does Nina call her parents? <input type="text" style="width:min(200px,80%)" placeholder="Your answer"></li>
+            <li>When does Nina prefer to tell her friends her news? <input type="text" style="width:min(260px,90%)" placeholder="Your answer"></li>
+            <li>When does Chris send photos by email? <input type="text" style="width:min(240px,85%)" placeholder="Your answer"></li>
+          </ol>
+        </div>
+
+        <div class="exercise" data-ex="1d">
+          <div class="exercise-title"><span class="letter">d</span> How often do you keep in touch with friends and family?</div>
+          <p>Circle the correct adverb for you:</p>
+          <p style="font-size:1rem;margin:.4rem 0">
+            <label style="margin-right:1rem"><input type="radio" name="freq" value="always"> always</label>
+            <label style="margin-right:1rem"><input type="radio" name="freq" value="often"> often</label>
+            <label style="margin-right:1rem"><input type="radio" name="freq" value="sometimes"> sometimes</label>
+            <label><input type="radio" name="freq" value="rarely"> rarely</label>
+          </p>
+          <p><strong>Think about:</strong></p>
+          <ol>
+            <li>a family member who lives in a different place</li>
+            <li>a friend you don’t see very often</li>
+          </ol>
+          <p>Which of these do you do with each person? Write the first letter of their name.</p>
+          <ul>
+            <li>talk on the phone or make a video call → <input type="text" style="width:60px" placeholder="e.g. M"></li>
+            <li>send emails or texts → <input type="text" style="width:60px"></li>
+            <li>send pictures, video or links → <input type="text" style="width:60px"></li>
+            <li>hardly ever keep in touch → <input type="text" style="width:60px"></li>
+            <li>meet for a chat → <input type="text" style="width:60px"></li>
+          </ul>
+        </div>
+
+        <div class="exercise">
+          <div class="exercise-title"><span class="letter">e</span> Work in pairs. Talk about your answers to 1d.</div>
+          <div class="speech-bubble">I rarely keep in touch with people. I never have time to …</div>
+          <div class="speech-bubble">I often keep in touch with my family. I enjoy sending …</div>
+          <div class="speech-bubble">I sometimes send photos to my sister Jane. They’re usually pictures of …</div>
+          <div class="speech-bubble">I send my friend Alex links to interesting articles.</div>
+          <p style="margin-top:.4rem">Notes for speaking:</p>
+          <textarea rows="3" placeholder="Your notes…" style="width:100%"></textarea>
+        </div>
+
+        <div class="exercise" data-ex="1f">
+          <div class="exercise-title"><span class="letter">f</span> Which of these opinions do you agree with?</div>
+          <ol>
+            <li>‘It’s nice to see photos of what your friends are doing.’</li>
+            <li>‘You don’t have to keep in touch with people all the time.’</li>
+            <li>‘If your parents worry a lot, you should call them.’</li>
+          </ol>
+          <textarea rows="2" placeholder="I agree with … because …" style="width:100%"></textarea>
+          <button type="button" class="ex-btn btn-write" onclick="checkWriting(this)">Check writing</button>
+        </div>
+
+        <details class="lookup-help">
+          <summary>How to look up words</summary>
+          <p>Double-click (or long-press on mobile) any word in the lesson to see a short definition. Glossary terms are checked first, then online dictionaries (needs internet).</p>
+        </details>
+      </div>
+    </div>
+
+    <!-- ========== SLIDE 1: Reading ========== -->
+    <div class="slide" data-slide="1">
+      <div class="slide-inner">
+        <span class="page-tag">Pages 14–15</span>
+        <div class="section-header"><span class="num">2</span><h2>Reading</h2></div>
+
+        <div class="exercise" data-ex="2a">
+          <div class="exercise-title"><span class="letter">a</span> Simon is a student from England. Look at his pictures from Salamanca, in Spain. What do you think he is doing there?</div>
+          <textarea rows="2" placeholder="I think he is …" style="width:100%"></textarea>
+        </div>
+
+        <div class="exercise" data-ex="2b">
+          <div class="exercise-title"><span class="letter">b</span> Read the emails and check your ideas in 2a. Which email is to his … ?</div>
+
+          <div class="email-card" id="email1">
+            <div class="from">Email 1</div>
+            <div class="body">Hope you’re both well and are enjoying the summer.
+I’m in Salamanca, in Spain. This is a photo I took of the old centre. It’s a beautiful old city, as you can see – and really big! It has an incredible mix of old, historical places and new, trendy areas.
+As you know, I’m learning Spanish at the moment. I’m taking a two-month Spanish course here, so my Spanish is slowly improving. The classes are very good, and we also watch Spanish films.
+It’s pretty hot here, but it’s nice and cool in the evenings.
+Love to all,
+Simon</div>
+          </div>
+
+          <div class="email-card" id="email2">
+            <div class="from">Email 2</div>
+            <div class="body">How’s it going? Are you having a good time in Berlin?
+Here are some photos of my group on the Spanish course. We’re all from different countries, so we usually speak English when we’re together – not very good for my Spanish! Anyway, I’m having a great time here, and the time’s going much too quickly. There are a lot of good cafés here, and we usually all go out at night together.
+What’s Berlin like? Send me some photos! See you back at college next month.
+Simon</div>
+          </div>
+
+          <div class="email-card" id="email3">
+            <div class="from">Email 3</div>
+            <div class="body">I’m sending you some photos of the family I’m staying with in Salamanca. They’ve got a daughter the same age as you (her name’s Blanca). She speaks English quite well, but we usually speak Spanish together. She introduced me to some of her friends, and I speak Spanish with them too … some of the time, not always! How’s your job in the supermarket? Hope it’s not working too hard and are saving a lot of money!
+See you next week.
+Love,
+Simon xx</div>
+          </div>
+
+          <p style="margin-top:.6rem">Match each email to the person:</p>
+          <p>Email 1 → <select data-answer="uncle and aunt|uncle|aunt|uncles and aunts">
+            <option value="">— choose —</option>
+            <option>friend Blake</option>
+            <option>uncle and aunt</option>
+            <option>younger sister Mika</option>
+          </select></p>
+          <p>Email 2 → <select data-answer="friend Blake|Blake|friend">
+            <option value="">— choose —</option>
+            <option>friend Blake</option>
+            <option>uncle and aunt</option>
+            <option>younger sister Mika</option>
+          </select></p>
+          <p>Email 3 → <select data-answer="younger sister Mika|sister Mika|Mika|younger sister">
+            <option value="">— choose —</option>
+            <option>friend Blake</option>
+            <option>uncle and aunt</option>
+            <option>younger sister Mika</option>
+          </select></p>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/3</span>
+          </div>
+        </div>
+
+        <div class="exercise" data-ex="2c">
+          <div class="exercise-title"><span class="letter">c</span> Who does Simon write to about these subjects?</div>
+          <p>the weather → <select data-answer="uncle and aunt|uncles|aunt|email 1">
+            <option value="">— choose —</option>
+            <option>friend Blake</option>
+            <option>uncle and aunt</option>
+            <option>younger sister Mika</option>
+          </select></p>
+          <p>what he does in the evenings → <select data-answer="friend Blake|Blake|email 2">
+            <option value="">— choose —</option>
+            <option>friend Blake</option>
+            <option>uncle and aunt</option>
+            <option>younger sister Mika</option>
+          </select></p>
+          <p>the family he is staying with → <select data-answer="younger sister Mika|sister|Mika|email 3">
+            <option value="">— choose —</option>
+            <option>friend Blake</option>
+            <option>uncle and aunt</option>
+            <option>younger sister Mika</option>
+          </select></p>
+          <p>learning to speak Spanish → <select data-answer="uncle and aunt|uncles|aunt|email 1|all|everyone">
+            <option value="">— choose —</option>
+            <option>friend Blake</option>
+            <option>uncle and aunt</option>
+            <option>younger sister Mika</option>
+          </select></p>
+          <p>the other students → <select data-answer="friend Blake|Blake|email 2">
+            <option value="">— choose —</option>
+            <option>friend Blake</option>
+            <option>uncle and aunt</option>
+            <option>younger sister Mika</option>
+          </select></p>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/5</span>
+          </div>
+        </div>
+
+        <div class="exercise" data-ex="2d">
+          <div class="exercise-title"><span class="letter">d</span> Answer the questions about Simon’s emails.</div>
+          <p><strong>1</strong> What does he say about speaking Spanish?</p>
+          <textarea rows="2" data-answer="slowly improving|improving|not very good|speaks English with friends|usually speak Spanish|classes are very good" style="width:100%" placeholder="He says …"></textarea>
+          <p><strong>2</strong> Why do you think he says different things about this to each person?</p>
+          <textarea rows="2" style="width:100%" placeholder="Because …"></textarea>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/1</span>
+          </div>
+          <button type="button" class="ex-btn btn-write" onclick="checkWriting(this)">Check writing</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SLIDE 2: Writing Skills ========== -->
+    <div class="slide" data-slide="2">
+      <div class="slide-inner">
+        <span class="page-tag">Page 15</span>
+        <div class="section-header"><span class="num">3</span><h2>Writing Skills – Correcting mistakes</h2></div>
+
+        <div class="exercise" data-ex="3a">
+          <div class="exercise-title"><span class="letter">a</span> Look at the pairs of sentences A–D. Which pair has mistakes in … ?</div>
+          <p>
+            <label><input type="checkbox" data-answer-group="3a-type" value="grammar"> grammar</label>
+            <label style="margin-left:.8rem"><input type="checkbox" data-answer-group="3a-type" value="spelling"> spelling</label>
+            <label style="margin-left:.8rem"><input type="checkbox" data-answer-group="3a-type" value="punctuation"> punctuation</label>
+            <label style="margin-left:.8rem"><input type="checkbox" data-answer-group="3a-type" value="capital letters"> capital letters</label>
+          </p>
+          <p style="font-size:.85rem;color:var(--muted)">Tick all that apply for the pairs below, then check individual pairs.</p>
+
+          <div class="pair-box">
+            <div class="pair-label">A</div>
+            <p>1 Hope you’re both well and are enjoying the summer</p>
+            <p>2 Are you having a good time in Berlin,</p>
+            <p>Mistakes type: <select data-answer="punctuation">
+              <option value="">—</option>
+              <option>grammar</option>
+              <option>spelling</option>
+              <option>punctuation</option>
+              <option>capital letters</option>
+            </select></p>
+          </div>
+          <div class="pair-box">
+            <div class="pair-label">B</div>
+            <p>1 I’m in salamanca, in spain.</p>
+            <p>2 the classes are very good, and we also watch spanish films.</p>
+            <p>Mistakes type: <select data-answer="capital letters">
+              <option value="">—</option>
+              <option>grammar</option>
+              <option>spelling</option>
+              <option>punctuation</option>
+              <option>capital letters</option>
+            </select></p>
+          </div>
+          <div class="pair-box">
+            <div class="pair-label">C</div>
+            <p>1 I having a great time here, and the time going much too quickly.</p>
+            <p>2 She speak English quite good, but we are usually speaking Spanish together.</p>
+            <p>Mistakes type: <select data-answer="grammar">
+              <option value="">—</option>
+              <option>grammar</option>
+              <option>spelling</option>
+              <option>punctuation</option>
+              <option>capital letters</option>
+            </select></p>
+          </div>
+          <div class="pair-box">
+            <div class="pair-label">D</div>
+            <p>1 Her are some fotos of my group on the Spanish corse.</p>
+            <p>2 We’re all from diferent countrys, so we usually speak English.</p>
+            <p>Mistakes type: <select data-answer="spelling">
+              <option value="">—</option>
+              <option>grammar</option>
+              <option>spelling</option>
+              <option>punctuation</option>
+              <option>capital letters</option>
+            </select></p>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/4</span>
+          </div>
+        </div>
+
+        <div class="exercise" data-ex="3b">
+          <div class="exercise-title"><span class="letter">b</span> Match the rules with mistakes in five of the sentences in 3a (A1–D2).</div>
+          <ol>
+            <li>The present continuous is formed <em>be + verb + -ing</em>. → sentence <input type="text" data-answer="C1|c1" style="width:60px" placeholder="e.g. C1"></li>
+            <li>When we leave out a letter, we write an apostrophe (’). → sentence <input type="text" data-answer="A1|a1" style="width:60px"></li>
+            <li>We use the present simple to talk about habits. → sentence <input type="text" data-answer="C2|c2" style="width:60px"></li>
+            <li>If a word ends in -y, we change it to -ies in the plural. → sentence <input type="text" data-answer="D2|d2" style="width:60px"></li>
+            <li>Place names start with a capital letter. → sentence <input type="text" data-answer="B1|b1|B2|b2" style="width:60px"></li>
+          </ol>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/5</span>
+          </div>
+        </div>
+
+        <div class="exercise" data-ex="3c">
+          <div class="exercise-title"><span class="letter">c</span> Correct all of the mistakes in the sentences in 3a. Check your answers in Simon’s emails.</div>
+          <p><strong>A1</strong> <input type="text" data-answer="Hope you're both well and are enjoying the summer.|Hope you're both well and are enjoying the summer" style="width:100%" placeholder="Corrected sentence"></p>
+          <p><strong>A2</strong> <input type="text" data-answer="Are you having a good time in Berlin?|Are you having a good time in Berlin" style="width:100%" placeholder="Corrected sentence"></p>
+          <p><strong>B1</strong> <input type="text" data-answer="I'm in Salamanca, in Spain.|I’m in Salamanca, in Spain." style="width:100%"></p>
+          <p><strong>B2</strong> <input type="text" data-answer="The classes are very good, and we also watch Spanish films.|the classes are very good, and we also watch Spanish films." style="width:100%"></p>
+          <p><strong>C1</strong> <input type="text" data-answer="I'm having a great time here, and the time's going much too quickly.|I’m having a great time here, and the time’s going much too quickly." style="width:100%"></p>
+          <p><strong>C2</strong> <input type="text" data-answer="She speaks English quite well, but we usually speak Spanish together.|She speaks English quite well, but we are usually speaking Spanish together." style="width:100%"></p>
+          <p><strong>D1</strong> <input type="text" data-answer="Here are some photos of my group on the Spanish course.|Here are some photos of my group on the Spanish course" style="width:100%"></p>
+          <p><strong>D2</strong> <input type="text" data-answer="We're all from different countries, so we usually speak English.|We’re all from different countries, so we usually speak English." style="width:100%"></p>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/8</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SLIDE 3: Writing ========== -->
+    <div class="slide" data-slide="3">
+      <div class="slide-inner">
+        <span class="page-tag">Page 15</span>
+        <div class="section-header"><span class="num">4</span><h2>Writing</h2></div>
+
+        <div class="exercise" data-ex="4a">
+          <div class="exercise-title"><span class="letter">a</span> Write an email to a friend or family member that you don’t see very often. Write about:</div>
+          <ul>
+            <li>how you are</li>
+            <li>what’s new for you (the place you’re living or the people you’re spending time with)</li>
+            <li>what you’re doing these days</li>
+          </ul>
+          <textarea rows="10" id="writingMain" placeholder="Hi …&#10;&#10;Hope you’re well …&#10;&#10;…" style="width:100%"></textarea>
+          <button type="button" class="ex-btn btn-write" onclick="checkWriting(this)">Check writing</button>
+        </div>
+
+        <div class="exercise">
+          <div class="exercise-title"><span class="letter">b</span> Work in pairs. Exchange emails and read your partner’s email. Circle their mistakes and write these letters at the end of the line.</div>
+          <ul>
+            <li>grammar <strong>G</strong></li>
+            <li>punctuation <strong>P</strong></li>
+            <li>spelling <strong>Sp</strong></li>
+            <li>capital letters <strong>L</strong></li>
+          </ul>
+          <p>Notes / mistakes you found:</p>
+          <textarea rows="3" style="width:100%" placeholder="e.g. Line 3 – Sp: diferent → different"></textarea>
+        </div>
+
+        <div class="exercise">
+          <div class="exercise-title"><span class="letter">c</span> Work in pairs. Correct the mistakes in your emails together.</div>
+          <textarea rows="4" style="width:100%" placeholder="Corrected version or notes…"></textarea>
+          <button type="button" class="ex-btn btn-write" onclick="checkWriting(this)">Check writing</button>
+        </div>
+
+        <div class="exercise">
+          <div class="exercise-title"><span class="letter">d</span> Read other students’ emails. Which email is the most interesting? Why?</div>
+          <textarea rows="2" style="width:100%" placeholder="I think … is the most interesting because …"></textarea>
+          <button type="button" class="ex-btn btn-write" onclick="checkWriting(this)">Check writing</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SLIDE 4: Extra – Nandeep ========== -->
+    <div class="slide" data-slide="4">
+      <div class="slide-inner">
+        <span class="page-tag">Extra practice</span>
+        <div class="section-header"><span class="num">+</span><h2>Extra Reading &amp; Writing</h2></div>
+        <p style="font-size:.88rem;color:var(--muted)">Alternative personal-email practice (from student materials).</p>
+
+        <div class="exercise" data-ex="5a">
+          <div class="exercise-title"><span class="letter">a</span> Read Nandeep’s email to Hannah and tick (✓) the correct answer.</div>
+          <div class="email-card">
+            <div class="from">Hi Hannah,</div>
+            <div class="body">I hope you’re enjoying your stay in Boston.
+I’m spending a month in India on holiday. I’m staying with my aunt and uncle and my two cousins in Delhi. I don’t speak much Hindi, but they all speak English very well, so communication isn’t a problem. They’re taking me to see a lot of really interesting places. Yesterday we drove to Agra and visited the Taj Mahal. It took two hours to get there. This is a photo I took – what an amazing building!
+It’s really hot here all the time, but my aunt and uncle have a swimming pool, so we spend a lot of our time in the water – it’s so relaxing! In the evening, I usually go to cafés with my cousins and their friends.
+I’m having a great time here in India!
+See you soon.
+Nandeep</div>
+          </div>
+          <p>
+            <label><input type="radio" name="nandeep" data-answer="c" value="a"> Nandeep is staying at the Taj Mahal hotel in Delhi.</label><br>
+            <label><input type="radio" name="nandeep" data-answer="c" value="b"> Nandeep is visiting his cousins in Boston.</label><br>
+            <label><input type="radio" name="nandeep" data-answer="c" value="c"> Nandeep is on holiday at his aunt and uncle’s house in Delhi.</label>
+          </p>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/1</span>
+          </div>
+        </div>
+
+        <div class="exercise" data-ex="5b">
+          <div class="exercise-title"><span class="letter">b</span> Read the email again. Are the sentences true (T) or false (F)?</div>
+          <ol>
+            <li>Nandeep mainly speaks in Hindi to his cousins. <select data-answer="F|false"><option value="">—</option><option>T</option><option>F</option></select></li>
+            <li>He’s visiting a lot of places while he’s in India. <select data-answer="T|true"><option value="">—</option><option>T</option><option>F</option></select></li>
+            <li>The Taj Mahal is in Delhi. <select data-answer="F|false"><option value="">—</option><option>T</option><option>F</option></select></li>
+            <li>Nandeep didn’t enjoy visiting the Taj Mahal. <select data-answer="F|false"><option value="">—</option><option>T</option><option>F</option></select></li>
+            <li>Nandeep often uses his aunt and uncle’s pool. <select data-answer="T|true"><option value="">—</option><option>T</option><option>F</option></select></li>
+            <li>Nandeep isn’t enjoying his holiday. <select data-answer="F|false"><option value="">—</option><option>T</option><option>F</option></select></li>
+          </ol>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/6</span>
+          </div>
+        </div>
+
+        <div class="exercise" data-ex="5c">
+          <div class="exercise-title"><span class="letter">c</span> Correcting mistakes – Correct the sentences.</div>
+          <p>1 I’m having a lovely time here in france. → <input type="text" data-answer="I'm having a lovely time here in France.|I’m having a lovely time here in France." style="width:100%"></p>
+          <p>2 Yesterday we visited the Palace of Versailles near Paris.</p>
+          <p style="font-size:.85rem;color:var(--muted)">(correct as written)</p>
+          <p>3 In the mornings, I usually going to the beach with my Portuguese friends. → <input type="text" data-answer="In the mornings, I usually go to the beach with my Portuguese friends." style="width:100%"></p>
+          <p>4 I hope your having a great time in Canada with your family. → <input type="text" data-answer="I hope you're having a great time in Canada with your family.|I hope you’re having a great time in Canada with your family." style="width:100%"></p>
+          <p>5 Their English are very good, but we always speak in German. → <input type="text" data-answer="Their English is very good, but we always speak in German.|Their English is very good, but we always speak German." style="width:100%"></p>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/4</span>
+          </div>
+        </div>
+
+        <div class="exercise">
+          <div class="exercise-title"><span class="letter">d</span> Read the email from Paul. Use the notes in brackets to write Maria’s reply.</div>
+          <div class="email-card">
+            <div class="from">Hi Maria,</div>
+            <div class="body">Hope you’re having a nice holiday. Tell me all about it! <em>(Describe my holiday)</em>
+What’s the hotel like? <em>(Not in a hotel – staying with my family!)</em>
+What do you do every day? <em>(Explain and send a photo)</em>
+See you soon! <em>(He OK? Ask)</em>
+Love,
+Paul</div>
+          </div>
+          <textarea rows="8" placeholder="Hi Paul,&#10;&#10;…" style="width:100%"></textarea>
+          <button type="button" class="ex-btn btn-write" onclick="checkWriting(this)">Check writing</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /slides -->
+
+  <div class="slide-nav">
+    <button type="button" id="prevBtn" onclick="changeSlide(-1)">← Prev</button>
+    <span class="counter" id="slideCounter">1 / 5</span>
+    <button type="button" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+  </div>
+</main>
+
+<!-- Results modal -->
+<div id="modalOverlay">
+  <div class="modal">
+    <h3>Results Report</h3>
+    <p>Student: <strong id="reportName">—</strong></p>
+    <p>Overall: <strong id="reportTotal">0%</strong></p>
+    <div id="reportBody"></div>
+    <div class="modal-actions">
+      <button type="button" style="background:#3182ce;color:#fff" onclick="copyReport()">Copy summary</button>
+      <button type="button" style="background:#718096;color:#fff" onclick="closeReport()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Word popup -->
+<div id="wordPopup">
+  <div class="wp-word" id="wpWord"></div>
+  <div class="wp-pos" id="wpPos"></div>
+  <div class="wp-def" id="wpDef"></div>
+  <div class="wp-ex" id="wpEx"></div>
+</div>
+
+<script>
+const LESSON_CODE = "1D";
+const LS_KEY = "empowerC1_" + LESSON_CODE;
+const PROGRESS_KEY = "empowerC1_lessonProgress";
+let currentSlide = 0;
+const totalSlides = 5;
+let popupIgnoreUntil = 0;
+
+/* ---------- normalise answers ---------- */
+function normalize(s) {
+  return (s || "")
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/[\u2018\u2019\u201A\u201B]/g, "'")
+    .replace(/[\u201C\u201D\u201E\u201F]/g, '"')
+    .replace(/[.,;:!?]+$/g, "")
+    .replace(/\s+/g, " ");
+}
+
+function isCorrect(user, answerAttr) {
+  if (!answerAttr) return false;
+  const alts = answerAttr.split("|").map(a => normalize(a));
+  const u = normalize(user);
+  return alts.some(a => u === a || (a.length > 3 && u.startsWith(a)) || (u.length > 3 && a.startsWith(u)));
+}
+
+/* ---------- live checking ---------- */
+function liveCheck(el) {
+  const ans = el.getAttribute("data-answer");
+  if (!ans) return;
+  const val = el.value || (el.type === "radio" || el.type === "checkbox" ? (el.checked ? el.value : "") : "");
+  if (!val) {
+    el.classList.remove("live-ok", "live-bad", "ok", "bad");
+    return;
+  }
+  if (isCorrect(val, ans)) {
+    el.classList.add("live-ok"); el.classList.remove("live-bad");
+  } else {
+    el.classList.add("live-bad"); el.classList.remove("live-ok");
+  }
+}
+
+document.addEventListener("input", e => {
+  if (e.target.matches("input[data-answer], select[data-answer], textarea[data-answer]")) {
+    liveCheck(e.target);
+    saveAll();
+    updateProgress();
+  }
+});
+document.addEventListener("change", e => {
+  if (e.target.matches("input[data-answer], select[data-answer], input[type=radio], input[type=checkbox]")) {
+    liveCheck(e.target);
+    saveAll();
+    updateProgress();
+  }
+});
+
+/* ---------- Check / Show / Clear ---------- */
+function checkEx(btn) {
+  const ex = btn.closest(".exercise");
+  if (!ex) return;
+  let correct = 0, total = 0;
+  ex.querySelectorAll("[data-answer]").forEach(el => {
+    total++;
+    const val = el.type === "radio" || el.type === "checkbox"
+      ? (el.checked ? el.value : "")
+      : (el.value || "");
+    if (el.type === "radio") {
+      // only score the checked one of the group once
+      if (!el.checked) { total--; return; }
+    }
+    if (isCorrect(val, el.getAttribute("data-answer"))) {
+      correct++;
+      el.classList.add("ok"); el.classList.remove("bad");
+    } else {
+      el.classList.add("bad"); el.classList.remove("ok");
+    }
+  });
+  // special for radio groups that share data-answer on each option
+  const radioGroups = {};
+  ex.querySelectorAll("input[type=radio][data-answer]").forEach(r => {
+    const name = r.name;
+    if (!radioGroups[name]) radioGroups[name] = { total: 0, correct: 0 };
+  });
+  Object.keys(radioGroups).forEach(name => {
+    const checked = ex.querySelector(`input[name="${name}"]:checked`);
+    if (checked) {
+      total = total - (ex.querySelectorAll(`input[name="${name}"]`).length - 1);
+      if (isCorrect(checked.value, checked.getAttribute("data-answer"))) {
+        // already counted
+      }
+    }
+  });
+  const pill = ex.querySelector("[data-score]");
+  if (pill) pill.textContent = correct + "/" + total;
+  saveAll();
+  updateProgress();
+}
+
+function showEx(btn) {
+  const ex = btn.closest(".exercise");
+  if (!ex) return;
+  ex.querySelectorAll("[data-answer]").forEach(el => {
+    const ans = el.getAttribute("data-answer").split("|")[0];
+    if (el.tagName === "SELECT") {
+      // try to select matching option
+      Array.from(el.options).forEach(o => {
+        if (normalize(o.value) === normalize(ans) || normalize(o.text) === normalize(ans)) el.value = o.value;
+      });
+      if (!el.value) el.value = ans;
+    } else if (el.type === "radio") {
+      if (normalize(el.value) === normalize(ans)) el.checked = true;
+    } else {
+      el.value = ans;
+    }
+    el.classList.add("ok"); el.classList.remove("bad", "live-bad");
+  });
+  checkEx(btn);
+}
+
+function clearEx(btn) {
+  const ex = btn.closest(".exercise");
+  if (!ex) return;
+  ex.querySelectorAll("input[data-answer], select[data-answer], textarea[data-answer]").forEach(el => {
+    if (el.type === "radio" || el.type === "checkbox") el.checked = false;
+    else el.value = "";
+    el.classList.remove("ok", "bad", "live-ok", "live-bad");
+  });
+  const pill = ex.querySelector("[data-score]");
+  if (pill) {
+    const n = ex.querySelectorAll("[data-answer]").length;
+    // rough for radios
+    pill.textContent = "0/" + Math.max(1, n);
+  }
+  saveAll();
+  updateProgress();
+}
+
+/* ---------- progress ---------- */
+function updateProgress() {
+  let correct = 0, total = 0;
+  document.querySelectorAll("[data-answer]").forEach(el => {
+    if (el.type === "radio" && !el.checked) return;
+    total++;
+    const val = el.type === "radio" || el.type === "checkbox" ? (el.checked ? el.value : "") : (el.value || "");
+    if (val && isCorrect(val, el.getAttribute("data-answer"))) correct++;
+  });
+  // substantial textareas count as attempted
+  document.querySelectorAll("textarea:not([data-answer])").forEach(ta => {
+    if (ta.value.trim().length > 20) { total++; correct++; }
+  });
+  const pct = total ? Math.round(correct / total * 100) : 0;
+  document.getElementById("progressBar").style.width = pct + "%";
+  document.getElementById("progressPct").textContent = pct + "%";
+  try {
+    const all = JSON.parse(localStorage.getItem(PROGRESS_KEY) || "{}");
+    all[LESSON_CODE] = { pct, updated: new Date().toISOString() };
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(all));
+  } catch (e) {}
+}
+
+/* ---------- localStorage ---------- */
+function saveAll() {
+  const data = { name: document.getElementById("studentName").value, slide: currentSlide, answers: {} };
+  document.querySelectorAll("input, select, textarea").forEach((el, i) => {
+    if (el.id === "studentName") return;
+    const key = el.name || el.id || ("f" + i);
+    if (el.type === "radio" || el.type === "checkbox") {
+      if (el.checked) data.answers[key] = el.value;
+    } else {
+      data.answers[key] = el.value;
+    }
+  });
+  try { localStorage.setItem(LS_KEY, JSON.stringify(data)); } catch (e) {}
+}
+
+function loadAll() {
+  try {
+    const data = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
+    if (data.name) document.getElementById("studentName").value = data.name;
+    if (data.answers) {
+      document.querySelectorAll("input, select, textarea").forEach((el, i) => {
+        if (el.id === "studentName") return;
+        const key = el.name || el.id || ("f" + i);
+        if (data.answers[key] !== undefined) {
+          if (el.type === "radio" || el.type === "checkbox") {
+            if (el.value === data.answers[key]) el.checked = true;
+          } else el.value = data.answers[key];
+        }
+      });
+    }
+    if (typeof data.slide === "number") goSlide(data.slide);
+  } catch (e) {}
+  updateProgress();
+}
+
+document.getElementById("studentName").addEventListener("input", saveAll);
+
+/* ---------- slides ---------- */
+function goSlide(n) {
+  currentSlide = Math.max(0, Math.min(totalSlides - 1, n));
+  document.querySelectorAll(".slide").forEach((s, i) => s.classList.toggle("active", i === currentSlide));
+  document.querySelectorAll(".nav-link").forEach((a, i) => a.classList.toggle("active", i === currentSlide));
+  document.getElementById("slideCounter").textContent = (currentSlide + 1) + " / " + totalSlides;
+  document.getElementById("prevBtn").disabled = currentSlide === 0;
+  document.getElementById("nextBtn").disabled = currentSlide === totalSlides - 1;
+  document.getElementById("topTitle").textContent = "1D · " + ["Speaking & Listening", "Reading", "Writing Skills", "Writing", "Extra"][currentSlide];
+  try { localStorage.setItem(LS_KEY + "_slide", currentSlide); } catch (e) {}
+  saveAll();
+}
+function changeSlide(d) { goSlide(currentSlide + d); }
+document.querySelectorAll(".nav-link").forEach(a => {
+  a.addEventListener("click", () => goSlide(parseInt(a.dataset.slide, 10)));
+});
+
+/* ---------- mobile menu ---------- */
+const sidebar = document.getElementById("sidebar");
+const backdrop = document.getElementById("sidebarBackdrop");
+document.getElementById("menuBtn").addEventListener("click", () => {
+  sidebar.classList.toggle("open");
+  backdrop.classList.toggle("show");
+});
+backdrop.addEventListener("click", () => {
+  sidebar.classList.remove("open");
+  backdrop.classList.remove("show");
+});
+
+/* ---------- Results Report ---------- */
+function openReport() {
+  const name = document.getElementById("studentName").value || "—";
+  document.getElementById("reportName").textContent = name;
+  let html = "<table><thead><tr><th>Exercise</th><th>Score</th></tr></thead><tbody>";
+  let grandC = 0, grandT = 0;
+  document.querySelectorAll(".exercise[data-ex]").forEach(ex => {
+    const id = ex.getAttribute("data-ex");
+    let c = 0, t = 0;
+    ex.querySelectorAll("[data-answer]").forEach(el => {
+      if (el.type === "radio" && !el.checked) return;
+      t++;
+      const val = el.type === "radio" || el.type === "checkbox" ? (el.checked ? el.value : "") : (el.value || "");
+      if (val && isCorrect(val, el.getAttribute("data-answer"))) c++;
+    });
+    if (t === 0) return;
+    grandC += c; grandT += t;
+    html += `<tr><td>${id}</td><td>${c}/${t}</td></tr>`;
+  });
+  html += "</tbody></table>";
+  document.getElementById("reportBody").innerHTML = html;
+  const pct = grandT ? Math.round(grandC / grandT * 100) : 0;
+  document.getElementById("reportTotal").textContent = pct + "% (" + grandC + "/" + grandT + ")";
+  document.getElementById("modalOverlay").classList.add("show");
+  window._lastReportText = `Empower C1 1D – Results\nName: ${name}\nOverall: ${pct}% (${grandC}/${grandT})\n\n` +
+    Array.from(document.querySelectorAll("#reportBody tr")).map(r => r.innerText).join("\n");
+}
+function closeReport() { document.getElementById("modalOverlay").classList.remove("show"); }
+function copyReport() {
+  if (window._lastReportText) navigator.clipboard.writeText(window._lastReportText).then(() => alert("Copied!"));
+}
+document.getElementById("resultsBtn").addEventListener("click", openReport);
+
+/* ---------- Word lookup ---------- */
+const GLOSSARY = {
+  "get in touch": { pos: "phrase", def: "to contact someone", ex: "I can’t seem to get in touch with you." },
+  "heard from": { pos: "phrase", def: "received news or a message from", ex: "We haven’t heard from you for a long time." },
+  "salamanca": { pos: "n", def: "a historic city in Spain", ex: "I’m in Salamanca, in Spain." },
+  "blanca": { pos: "n", def: "a girl’s name (Spanish for ‘white’)", ex: "Her name’s Blanca." },
+  "taj mahal": { pos: "n", def: "a famous marble mausoleum in Agra, India", ex: "We visited the Taj Mahal." },
+  "rarely": { pos: "adv", def: "not often", ex: "I rarely keep in touch with people." },
+  "usually": { pos: "adv", def: "most of the time; normally", ex: "We usually speak Spanish together." },
+  "hardly ever": { pos: "adv", def: "almost never", ex: "I hardly ever write postcards." }
+};
+function showWordPopup(word, x, y) {
+  const w = word.toLowerCase().replace(/[^a-z'\-\s]/g, "").trim();
+  if (w.length < 2) return;
+  const pop = document.getElementById("wordPopup");
+  document.getElementById("wpWord").textContent = w;
+  document.getElementById("wpPos").textContent = "";
+  document.getElementById("wpDef").textContent = "Looking up…";
+  document.getElementById("wpEx").textContent = "";
+  pop.classList.add("show");
+  const pw = pop.offsetWidth, ph = pop.offsetHeight;
+  pop.style.left = Math.min(x, window.innerWidth - pw - 12) + "px";
+  pop.style.top = Math.min(y, window.innerHeight - ph - 12) + "px";
+  popupIgnoreUntil = Date.now() + 400;
+
+  if (GLOSSARY[w]) {
+    const g = GLOSSARY[w];
+    document.getElementById("wpPos").textContent = g.pos || "";
+    document.getElementById("wpDef").textContent = g.def || "";
+    document.getElementById("wpEx").textContent = g.ex || "";
+    return;
+  }
+  const ctrl = new AbortController();
+  const to = setTimeout(() => ctrl.abort(), 8000);
+  fetch("https://api.datamuse.com/words?sp=" + encodeURIComponent(w) + "&md=d&max=1", { signal: ctrl.signal })
+    .then(r => r.json())
+    .then(data => {
+      if (data[0] && data[0].defs && data[0].defs[0]) {
+        const parts = data[0].defs[0].split("\t");
+        document.getElementById("wpPos").textContent = parts[0] || "";
+        document.getElementById("wpDef").textContent = parts[1] || data[0].defs[0];
+        clearTimeout(to);
+        return null;
+      }
+      return fetch("https://api.dictionaryapi.dev/api/v2/entries/en/" + encodeURIComponent(w), { signal: ctrl.signal });
+    })
+    .then(r => r && r.json ? r.json() : null)
+    .then(data => {
+      clearTimeout(to);
+      if (!data || !data[0]) {
+        if (document.getElementById("wpDef").textContent === "Looking up…")
+          document.getElementById("wpDef").textContent = "No definition found.";
+        return;
+      }
+      const e = data[0];
+      const m = e.meanings && e.meanings[0];
+      document.getElementById("wpPos").textContent = (m && m.partOfSpeech) || "";
+      document.getElementById("wpDef").textContent = (m && m.definitions && m.definitions[0].definition) || "No definition found.";
+      document.getElementById("wpEx").textContent = (m && m.definitions && m.definitions[0].example) || "";
+    })
+    .catch(() => {
+      clearTimeout(to);
+      if (document.getElementById("wpDef").textContent === "Looking up…")
+        document.getElementById("wpDef").textContent = "Lookup failed (offline?).";
+    });
+}
+function closeWordPopup() { document.getElementById("wordPopup").classList.remove("show"); }
+document.addEventListener("dblclick", e => {
+  const sel = window.getSelection();
+  const t = (sel && sel.toString().trim()) || "";
+  if (t && t.split(/\s+/).length <= 4) showWordPopup(t, e.clientX, e.clientY + 8);
+});
+let lpTimer = null;
+document.addEventListener("touchstart", e => {
+  const t = e.touches[0];
+  lpTimer = setTimeout(() => {
+    const sel = window.getSelection();
+    let word = (sel && sel.toString().trim()) || "";
+    if (!word) {
+      const el = document.elementFromPoint(t.clientX, t.clientY);
+      if (el && el.textContent) word = (el.textContent.trim().split(/\s+/)[0] || "");
+    }
+    if (word) showWordPopup(word, t.clientX, t.clientY);
+  }, 550);
+}, { passive: true });
+document.addEventListener("touchend", () => clearTimeout(lpTimer));
+document.addEventListener("touchmove", () => clearTimeout(lpTimer));
+document.addEventListener("click", e => {
+  if (Date.now() < popupIgnoreUntil) return;
+  if (!e.target.closest("#wordPopup")) closeWordPopup();
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeWordPopup(); });
+
+/* ---------- Writing feedback ---------- */
+function checkWriting(btn) {
+  const ta = btn.closest(".exercise, .card, div")?.querySelector("textarea") || btn.previousElementSibling;
+  if (!ta || ta.tagName !== "TEXTAREA") {
+    const parent = btn.parentElement;
+    const area = parent && parent.querySelector("textarea");
+    if (!area) { alert("No text area found."); return; }
+    return runWritingCheck(area, btn);
+  }
+  runWritingCheck(ta, btn);
+}
+function runWritingCheck(ta, btn) {
+  const text = ta.value.trim();
+  if (!text) { alert("Write something first."); return; }
+  let panel = ta.parentElement.querySelector(".wf-panel");
+  if (!panel) {
+    panel = document.createElement("div");
+    panel.className = "wf-panel";
+    ta.parentElement.appendChild(panel);
+  }
+  panel.classList.add("show");
+  panel.innerHTML = "Checking…";
+  btn.disabled = true;
+  fetch("https://api.languagetool.org/v2/check", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: "language=en-GB&text=" + encodeURIComponent(text)
+  })
+  .then(r => r.json())
+  .then(data => {
+    btn.disabled = false;
+    const issues = [];
+    (data.matches || []).forEach(m => {
+      issues.push({
+        what: m.message,
+        why: (m.rule && m.rule.description) || "",
+        try: (m.replacements || []).slice(0, 3).map(r => r.value)
+      });
+    });
+    if (!issues.length) {
+      panel.innerHTML = '<strong style="color:var(--ok)">Looking good!</strong> No major issues found.';
+      return;
+    }
+    panel.innerHTML = issues.map(is => {
+      const tries = (is.try || []).map(t => `<span class="try">${t}</span>`).join(" · ");
+      return `<div class="wf-issue"><div class="what">${is.what}</div>
+        ${is.why ? `<div class="why">${is.why}</div>` : ""}
+        ${tries ? `<div>Try: ${tries}</div>` : ""}</div>`;
+    }).join("");
+  })
+  .catch(() => {
+    btn.disabled = false;
+    panel.innerHTML = "Could not check writing (needs internet). Try again when online.";
+  });
+}
+
+/* ---------- init ---------- */
+loadAll();
+goSlide(currentSlide);
+updateProgress();
+</script>
+</body>
+</html>
