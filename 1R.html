@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#1e3a5f">
+<title>Empower · Unit 1 Review &amp; Extension</title>
+<style>
+:root {
+  --primary:#1e3a5f; --primary2:#2b6cb0; --accent:#3182ce;
+  --ok:#38a169; --okbg:#f0fff4; --bad:#e53e3e; --badbg:#fff5f5;
+  --bg:#f0f4f8; --card:#fff; --border:#e2e8f0; --muted:#718096;
+  --sidebar-w:220px; --topbar-h:36px;
+  --radius:10px; --shadow:0 1px 3px rgba(0,0,0,.06);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,system-ui,sans-serif;background:var(--bg);color:#1a202c;line-height:1.55;-webkit-text-size-adjust:100%}
+body{
+  display:grid;
+  grid-template-columns:var(--sidebar-w) minmax(0,1fr);
+  grid-template-rows:var(--topbar-h) minmax(0,1fr);
+  grid-template-areas:"side top" "side main";
+  overflow:hidden;
+  min-height:100dvh;
+  padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+}
+#topbar{
+  grid-area:top;
+  background:linear-gradient(135deg,#1e3a5f,#2b6cb0);
+  color:#fff;
+  display:flex;align-items:center;gap:.45rem;
+  padding:0 .65rem;z-index:100;
+  height:var(--topbar-h);min-height:var(--topbar-h);
+  box-shadow:0 1px 4px rgba(0,0,0,.12);min-width:0;
+}
+#topTitle{font-size:.8rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;margin:0;color:#fff}
+#menuBtn{
+  display:none;background:rgba(255,255,255,.15);border:none;color:#fff;
+  width:32px;height:32px;border-radius:8px;font-size:1.1rem;cursor:pointer;
+  align-items:center;justify-content:center;
+}
+#menuBtn svg{fill:#fff;width:18px;height:18px}
+#sidebar{
+  grid-area:side;background:#16324f;color:#fff;
+  overflow-y:auto;padding:.6rem 0;-webkit-overflow-scrolling:touch;min-height:0;
+  display:flex;flex-direction:column;
+}
+.sidebar-brand{padding:0 .85rem .5rem;font-size:.75rem;font-weight:700;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:.35rem;line-height:1.25;color:#fff}
+.sidebar-brand .title{font-size:.78rem;font-weight:700;color:#fff}
+.sidebar-student{padding:.5rem .85rem .65rem;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:.35rem}
+.sidebar-student label{display:block;font-size:.68rem;color:#90cdf4;margin-bottom:.25rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.sidebar-student input{width:100%;padding:.35rem .5rem;border:none;border-radius:6px;font-size:.82rem;margin-bottom:.4rem;background:#fff;color:#1a202c}
+#resultsBtn{width:100%;padding:.4rem .5rem;border-radius:6px;font-size:.75rem;background:#ed8936;color:#1a202c;border:none;font-weight:700;cursor:pointer;margin:0}
+#resultsBtn:hover{background:#dd6b20}
+.progress-wrap{padding:.35rem .85rem .5rem}
+.progress-label{font-size:.68rem;color:#90cdf4;margin-bottom:.2rem;font-weight:600}
+.progress-bar-bg{height:8px;background:rgba(255,255,255,.15);border-radius:4px;overflow:hidden}
+.progress-bar-fg{height:100%;background:#38a169;border-radius:4px;width:0%;transition:width .3s}
+.progress-pct{font-size:.72rem;color:#a0aec0;margin-top:.15rem}
+.sidebar-nav{flex:1;overflow-y:auto;padding:0 0 .5rem}
+.nav-group-title{font-size:.62rem;text-transform:uppercase;letter-spacing:.07em;color:#90cdf4;padding:.55rem 1rem .2rem;font-weight:600}
+.nav-link{display:flex;align-items:center;gap:.4rem;color:#bee3f8;text-decoration:none;padding:.38rem .85rem;font-size:.8rem;font-weight:500;border-left:3px solid transparent;transition:all .15s;cursor:pointer}
+.nav-link:hover,.nav-link.active{background:rgba(49,130,206,.25);color:#fff;border-left-color:#63b3ed}
+.nav-link .nav-num{width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.1);display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0}
+.nav-link.active .nav-num{background:#3182ce}
+#main{grid-area:main;overflow:hidden;display:flex;flex-direction:column;background:var(--bg);min-width:0;min-height:0}
+#slides{flex:1;overflow:hidden;position:relative}
+.slide{display:none;position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:.55rem .7rem 1.2rem}
+.slide.active{display:block}
+.slide-inner{max-width:820px;margin:0 auto}
+.slide-nav{flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:.6rem;padding:.45rem .7rem calc(.45rem + var(--safe-bottom));background:#fff;border-top:1px solid var(--border)}
+.slide-nav button{background:var(--accent);color:#fff;border:none;padding:.4rem .85rem;border-radius:8px;font-weight:600;font-size:.82rem;cursor:pointer;min-width:72px}
+.slide-nav button:disabled{opacity:.4;cursor:not-allowed}
+.slide-nav .counter{font-size:.8rem;color:var(--muted);font-weight:600;min-width:48px;text-align:center}
+.section-header{display:flex;align-items:center;gap:.5rem;margin-bottom:.45rem;padding-bottom:.3rem;border-bottom:2px solid var(--accent)}
+.section-header .num{width:22px;height:22px;border-radius:6px;background:var(--accent);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700}
+.section-header h2{color:var(--primary);font-size:1.05rem;font-weight:700;margin:0;border:none;padding:0}
+.page-tag{display:inline-block;background:#ebf8ff;color:var(--accent);font-size:.7rem;font-weight:700;padding:.15rem .55rem;border-radius:20px;margin-bottom:.5rem}
+.skill-box{font-size:.82rem;color:#2c5282;background:#ebf8ff;border-left:3px solid var(--accent);padding:.4rem .7rem;margin:.55rem 0;border-radius:0 8px 8px 0}
+.exercise{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:.65rem .8rem;margin:.55rem 0}
+.exercise-title{font-weight:700;color:var(--primary);margin-bottom:.45rem;font-size:.92rem}
+.exercise-title .letter{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:6px;background:var(--accent);color:#fff;font-size:.7rem;margin-right:.25rem}
+p,li{margin-bottom:.35rem;font-size:.92rem}
+ul,ol{padding-left:1.2rem;margin-bottom:.5rem}
+input[type=text],select,textarea{font-family:inherit;font-size:16px;padding:.4rem .6rem;border:2px solid #cbd5e0;border-radius:8px;max-width:100%;background:#fff;transition:border-color .12s,box-shadow .12s}
+input[type=text]:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(49,130,206,.15)}
+input.ok,select.ok,input.live-ok,select.live-ok{border-color:var(--ok)!important;background:var(--okbg)!important}
+input.bad,select.bad,input.live-bad,select.live-bad{border-color:var(--bad)!important;background:var(--badbg)!important}
+.btn-row{display:flex;flex-wrap:wrap;gap:.3rem;align-items:center;margin-top:.45rem}
+button.ex-btn{display:inline-flex;align-items:center;gap:.25rem;background:var(--accent);color:#fff;border:none;padding:.42rem .9rem;border-radius:8px;font-size:.84rem;font-weight:600;cursor:pointer;margin:.15rem .15rem .15rem 0;transition:background .15s}
+.btn-check{background:var(--ok)}.btn-check:hover{background:#2f855a}
+.btn-show{background:#805ad5}.btn-show:hover{background:#6b46c1}
+.btn-clear{background:#718096}.btn-clear:hover{background:#4a5568}
+.btn-write{background:transparent;color:#805ad5;border:2px solid #805ad5;padding:.38rem .8rem}
+.btn-write:hover{background:#faf5ff}
+.score-pill{font-weight:700;font-size:.78rem;padding:.2rem .55rem;border-radius:20px;background:#edf2f7;color:var(--muted)}
+.pair-box{background:#fff;border:1px solid var(--border);border-radius:8px;padding:.6rem .8rem;margin:.4rem 0}
+.speech-bubble{background:#ebf8ff;border-radius:12px;padding:.5rem .8rem;margin:.3rem 0;font-size:.88rem;border:1px solid #bee3f8}
+.person-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:.7rem .9rem;margin:.5rem 0;box-shadow:var(--shadow)}
+.person-card h4{color:var(--primary);margin-bottom:.3rem;font-size:.95rem}
+.can-do{display:flex;align-items:center;gap:.5rem;padding:.35rem 0;border-bottom:1px solid var(--border)}
+.can-do:last-child{border-bottom:none}
+.can-do input[type=checkbox]{width:18px;height:18px}
+#modalOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center;padding:1rem}
+#modalOverlay.show{display:flex}
+.modal{background:#fff;border-radius:12px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;padding:1.2rem;box-shadow:0 10px 40px rgba(0,0,0,.2)}
+.modal h3{margin-bottom:.6rem;color:var(--primary)}
+.modal table{width:100%;border-collapse:collapse;font-size:.85rem;margin:.5rem 0}
+.modal th,.modal td{border:1px solid var(--border);padding:.35rem .5rem;text-align:left}
+.modal th{background:var(--primary2);color:#fff}
+.modal-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.8rem}
+.modal-actions button{padding:.4rem .8rem;border-radius:8px;border:none;font-weight:600;cursor:pointer}
+#wordPopup{display:none;position:fixed;z-index:1100;background:#fff;border:1px solid var(--border);border-radius:10px;padding:.7rem .9rem;box-shadow:0 8px 24px rgba(0,0,0,.15);max-width:280px;font-size:.88rem}
+#wordPopup.show{display:block}
+#wordPopup .wp-word{font-weight:700;color:var(--primary);font-size:1rem}
+#wordPopup .wp-pos{color:var(--muted);font-size:.78rem;font-style:italic}
+#wordPopup .wp-def{margin-top:.25rem}
+#wordPopup .wp-ex{margin-top:.2rem;color:#4a5568;font-size:.82rem}
+.wf-panel{display:none;background:#faf5ff;border:1px solid #d6bcfa;border-radius:8px;padding:.6rem;margin-top:.4rem;font-size:.85rem}
+.wf-panel.show{display:block}
+.wf-issue{margin-bottom:.4rem;padding-bottom:.35rem;border-bottom:1px solid #e9d8fd}
+.wf-issue .what{font-weight:600;color:#553c9a}
+.wf-issue .why{color:#6b46c1;font-size:.8rem}
+.try{display:inline-block;background:#e9d8fd;color:#553c9a;padding:.1rem .4rem;border-radius:4px;margin:.1rem;cursor:pointer;font-size:.8rem}
+@media(max-width:720px){
+  body{grid-template-columns:1fr;grid-template-rows:var(--topbar-h) 1fr;grid-template-areas:"top" "main"}
+  #sidebar{position:fixed;left:0;top:0;bottom:0;width:min(280px,85vw);z-index:200;transform:translateX(-100%);transition:transform .25s}
+  #sidebar.open{transform:translateX(0)}
+  #menuBtn{display:inline-flex}
+  .sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:150}
+  .sidebar-backdrop.show{display:block}
+}
+</style>
+</head>
+<body>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+<aside id="sidebar">
+  <div class="sidebar-brand">
+    <div class="title">Unit 1 · Review &amp; Extension</div>
+  </div>
+  <div style="padding:.35rem .85rem">
+    <a href="index.html" style="color:#90cdf4;font-size:.8rem;text-decoration:none">← Main page</a>
+  </div>
+  <div class="sidebar-student">
+    <label>Student name</label>
+    <input type="text" id="studentName" placeholder="Your name" autocomplete="name">
+    <button id="resultsBtn" type="button">Results Report</button>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-label">Your progress</div>
+    <div class="progress-bar-bg"><div class="progress-bar-fg" id="progressBar"></div></div>
+    <div class="progress-pct" id="progressPct">0%</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-group-title">Review</div>
+    <a class="nav-link active" data-slide="0"><span class="nav-num">1</span> Grammar</a>
+    <a class="nav-link" data-slide="1"><span class="nav-num">2</span> Vocabulary</a>
+    <a class="nav-link" data-slide="2"><span class="nav-num">3</span> Wordpower: like</a>
+    <a class="nav-link" data-slide="3"><span class="nav-num">4</span> Reading Extension</a>
+    <a class="nav-link" data-slide="4"><span class="nav-num">5</span> Listening</a>
+    <a class="nav-link" data-slide="5"><span class="nav-num">6</span> Review Progress</a>
+  </nav>
+</aside>
+
+<header id="topbar">
+  <button id="menuBtn" type="button" aria-label="Menu">
+    <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+  </button>
+  <h1 id="topTitle">Unit 1 · Review &amp; Extension</h1>
+</header>
+
+<main id="main">
+  <div id="slides">
+
+    <!-- SLIDE 0: Grammar -->
+    <div class="slide active" data-slide="0">
+      <div class="slide-inner">
+        <span class="page-tag">Review &amp; Extension · p.16</span>
+        <div class="section-header"><span class="num">1</span><h2>Grammar – Present simple &amp; continuous</h2></div>
+
+        <div class="exercise" data-ex="1a">
+          <div class="exercise-title"><span class="letter">a</span> Put the words in the correct order to make questions.</div>
+          <p>1 night / did / go out / you / last? → <input type="text" data-answer="Did you go out last night?" style="width:min(280px,95%)" placeholder="Question"></p>
+          <p>2 where / you / last weekend / go / did? → <input type="text" data-answer="Where did you go last weekend?" style="width:min(300px,95%)" placeholder="Question"></p>
+          <p>3 kinds of / like / you / what / TV programmes? → <input type="text" data-answer="What kinds of TV programmes do you like?" style="width:min(340px,95%)" placeholder="Question"></p>
+          <p>4 do / know / who / at / you? → <input type="text" data-answer="Who do you know at college?|Who do you know at work?|Who do you know at …?" style="width:min(280px,90%)" placeholder="Question"></p>
+          <p>5 you / how often / play / sport / do? → <input type="text" data-answer="How often do you play sport?" style="width:min(260px,90%)" placeholder="Question"></p>
+          <p>6 these / how / you / are / today? → <input type="text" data-answer="How are you today?" style="width:min(200px,80%)" placeholder="Question"></p>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/6</span>
+          </div>
+        </div>
+
+        <div class="exercise" data-ex="1b">
+          <div class="exercise-title"><span class="letter">b</span> Ask and answer the questions in 1a with a partner.</div>
+          <div class="speech-bubble">Did you go out last night? – Yes, I went to a café with some friends.</div>
+          <div class="speech-bubble">Where did you go last weekend? – I stayed at home and watched films.</div>
+          <p>Notes for speaking:</p>
+          <textarea rows="3" placeholder="Write your answers or notes…" style="width:100%"></textarea>
+        </div>
+
+        <div class="exercise" data-ex="1c">
+          <div class="exercise-title"><span class="letter">c</span> Complete the conversation with the present simple or present continuous forms of the verbs.</div>
+          <div class="pair-box">
+            <p><strong>JACK:</strong> Hi, Mum.</p>
+            <p><strong>MUM:</strong> Oh, hi, Jack. Nice of you to call. You <input type="text" data-answer="don't call|do not call" style="width:110px" placeholder="not call"> very often!</p>
+            <p><strong>JACK:</strong> Oh, come on, Mum! I <input type="text" data-answer="work|am working|'m working" style="width:100px" placeholder="work"> really hard at the moment. I never have the time to call. And I <input type="text" data-answer="call|am calling|'m calling" style="width:100px" placeholder="call"> you all the time. We need to talk to you and hear your news, that’s all.</p>
+            <p><strong>MUM:</strong> Your sister <input type="text" data-answer="calls" style="width:90px" placeholder="call"> me every weekend.</p>
+            <p><strong>JACK:</strong> Well, we <input type="text" data-answer="are|we're" style="width:70px" placeholder="be"> busy now, but the world <input type="text" data-answer="is changing|'s changing" style="width:110px" placeholder="change">, Mum. Some of my friends never <input type="text" data-answer="call" style="width:70px" placeholder="call"> home. They just <input type="text" data-answer="email|send emails" style="width:90px" placeholder="email"> or send a text.</p>
+            <p><strong>MUM:</strong> I preferred how things were in the past.</p>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/8</span>
+          </div>
+        </div>
+
+        <div class="skill-box">
+          <strong>Tip:</strong> Use the <em>present simple</em> for habits and routines (e.g. <em>She calls me every weekend</em>). Use the <em>present continuous</em> for actions happening now or temporary situations (e.g. <em>I’m working hard at the moment</em>).
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 1: Vocabulary -->
+    <div class="slide" data-slide="1">
+      <div class="slide-inner">
+        <span class="page-tag">Review &amp; Extension · p.16</span>
+        <div class="section-header"><span class="num">2</span><h2>Vocabulary</h2></div>
+
+        <div class="exercise" data-ex="2a">
+          <div class="exercise-title"><span class="letter">a</span> Complete the sentences with suitable adjectives.</div>
+          <p>1 The film was really <input type="text" data-answer="boring|dull|tedious" style="width:100px" placeholder="adj"> – I fell asleep halfway through!</p>
+          <p>2 I spoke to Sara yesterday. It sounds like she had a really <input type="text" data-answer="good|great|amazing|wonderful" style="width:100px" placeholder="adj"> holiday.</p>
+          <p>3 They’ve got a nice house, but they live in a really <input type="text" data-answer="quiet|noisy|busy|crowded" style="width:100px" placeholder="adj"> part of town.</p>
+          <p>4 It was a <input type="text" data-answer="sunny|hot|lovely|beautiful" style="width:100px" placeholder="adj"> day, so we decided to go to the beach.</p>
+          <p>5 I come home from work to a <input type="text" data-answer="messy|tidy|clean|dirty" style="width:100px" placeholder="adj"> flat every time – my flatmates never clean!</p>
+          <p>6 He’s a <input type="text" data-answer="friendly|kind|nice|helpful" style="width:100px" placeholder="adj"> person. That was the best bus driver we’ve had for a while.</p>
+          <p>7 This summer, the weather here was <input type="text" data-answer="awful|terrible|bad|horrible|wet" style="width:100px" placeholder="adj"> – it rained the whole time.</p>
+          <p>8 This soup is <input type="text" data-answer="delicious|tasty|yummy|great" style="width:100px" placeholder="adj">!</p>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/8</span>
+          </div>
+        </div>
+
+        <div class="exercise" data-ex="2b">
+          <div class="exercise-title"><span class="letter">b</span> Choose the correct answers.</div>
+          <p>1 I <select data-answer="absolutely"><option value="">—</option><option>absolutely</option><option>fairly</option></select> love local food.</p>
+          <p>2 My parents live abroad. I <select data-answer="rarely"><option value="">—</option><option>rarely</option><option>always</option></select> see them.</p>
+          <p>3 I think American films are <select data-answer="quite"><option value="">—</option><option>absolutely</option><option>quite</option></select> good, but I don’t like all of them.</p>
+          <p>4 I <select data-answer="usually"><option value="">—</option><option>usually</option><option>particularly</option></select> go for a run once or twice a week.</p>
+          <p>5 I <select data-answer="really"><option value="">—</option><option>really</option><option>fairly</option></select> hate rock music.</p>
+          <p>6 I love all sports, but tennis is <select data-answer="especially"><option value="">—</option><option>especially</option><option>usually</option></select> good.</p>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/6</span>
+          </div>
+        </div>
+
+        <div class="exercise" data-ex="2c">
+          <div class="exercise-title"><span class="letter">c</span> Which sentences in 2b are true for you? Write about yourself.</div>
+          <textarea rows="4" placeholder="e.g. I absolutely love Italian food. I rarely watch American films…" style="width:100%"></textarea>
+          <button type="button" class="ex-btn btn-write" onclick="checkWriting(this)">Check writing</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: Wordpower like -->
+    <div class="slide" data-slide="2">
+      <div class="slide-inner">
+        <span class="page-tag">Review &amp; Extension · p.16</span>
+        <div class="section-header"><span class="num">3</span><h2>Wordpower · like</h2></div>
+
+        <div class="skill-box">
+          We often use <strong>like</strong> with the verbs <em>look</em> and <em>sound</em>.
+          <ul style="margin-top:.3rem">
+            <li><strong>saying two things are similar:</strong> <em>You look like your sister.</em></li>
+            <li><strong>saying your opinion about what you heard or read:</strong> <em>It sounds like she had a really good holiday.</em></li>
+            <li><strong>saying what you think will happen:</strong> <em>It looks like it might rain – it’s very cloudy.</em></li>
+          </ul>
+        </div>
+
+        <div class="exercise" data-ex="3a">
+          <div class="exercise-title"><span class="letter">a</span> Match the expressions in bold with the meanings.</div>
+          <p>1 What was the film <strong>like</strong>? → <select data-answer="what was your opinion of">
+            <option value="">— choose —</option>
+            <option>what was your opinion of</option>
+            <option>similar to</option>
+            <option>for example</option>
+            <option>if you want</option>
+          </select></p>
+          <p>2 I can go to work by bus <strong>if you like</strong>. → <select data-answer="if you want">
+            <option value="">— choose —</option>
+            <option>what was your opinion of</option>
+            <option>similar to</option>
+            <option>for example</option>
+            <option>if you want</option>
+          </select></p>
+          <p>3 I enjoy visiting countries with a lot of history, <strong>like</strong> Greece. → <select data-answer="for example">
+            <option value="">— choose —</option>
+            <option>what was your opinion of</option>
+            <option>similar to</option>
+            <option>for example</option>
+            <option>if you want</option>
+          </select></p>
+          <p>4 Your university is different from others – it’s not <strong>like</strong> most of the others. → <select data-answer="similar to">
+            <option value="">— choose —</option>
+            <option>what was your opinion of</option>
+            <option>similar to</option>
+            <option>for example</option>
+            <option>if you want</option>
+          </select></p>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/4</span>
+          </div>
+        </div>
+
+        <div class="exercise" data-ex="3b">
+          <div class="exercise-title"><span class="letter">b</span> Complete the sentences with <em>like</em> / <em>if you like</em>.</div>
+          <p>1 A: Is your university different from others in your country?<br>
+          B: No, it’s <input type="text" data-answer="like" style="width:80px" placeholder="…"> most of the others.</p>
+          <p>2 A: We can meet tomorrow.<br>
+          B: OK – come to my flat for a coffee <input type="text" data-answer="if you like" style="width:100px" placeholder="…"></p>
+          <p>3 A: Do you want me to bring something to the dinner party?<br>
+          B: Yes. Bring something sweet <input type="text" data-answer="like" style="width:80px" placeholder="…"> cake or ice cream.</p>
+          <p>4 A: We went to that new restaurant yesterday.<br>
+          B: What was it <input type="text" data-answer="like" style="width:80px" placeholder="…">?</p>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/4</span>
+          </div>
+        </div>
+
+        <div class="exercise" data-ex="3c">
+          <div class="exercise-title"><span class="letter">c</span> Complete with the correct forms of <em>look like</em> or <em>sound like</em>.</div>
+          <p>1 It <input type="text" data-answer="looks like" style="width:110px" placeholder="look/sound like"> it might rain – it’s very cloudy.</p>
+          <p>2 Sam invited Tom to the party, so it <input type="text" data-answer="looks like|sounds like" style="width:110px" placeholder="look/sound like"> he’ll come.</p>
+          <p>3 You don’t <input type="text" data-answer="look like" style="width:110px" placeholder="look/sound like"> your sister. She’s very tall.</p>
+          <p>4 I spoke to Maria yesterday. It <input type="text" data-answer="sounds like" style="width:110px" placeholder="look/sound like"> she had a really good time.</p>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/4</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: Reading Extension -->
+    <div class="slide" data-slide="3">
+      <div class="slide-inner">
+        <span class="page-tag">Reading &amp; Listening Extension</span>
+        <div class="section-header"><span class="num">4</span><h2>Reading Extension</h2></div>
+
+        <div class="exercise" data-ex="4a">
+          <div class="exercise-title"><span class="letter">a</span> Read the article. Match the statements 1–3 with the people.</div>
+
+          <div class="person-card">
+            <h4>EMMA, 27 · MEXICO CITY</h4>
+            <p>I work as an English teacher in Mexico City. It’s an amazing city. We teach people who have some savings. Working here isn’t for everyone, though. I miss home too. My plan is to return in the next few years. One year abroad is enough for me – I love seeing new places, but I also miss people and the weather back home.</p>
+          </div>
+          <div class="person-card">
+            <h4>VANESSA, 25 · BERLIN</h4>
+            <p>I’ve been in Berlin for two years. I work in IT. My job is sometimes boring, but the city is exciting. I’ve travelled to lots of different parts of the country. It’s easy to travel around Germany. I don’t plan to live in a new city forever – I want to stay for a long time!</p>
+          </div>
+          <div class="person-card">
+            <h4>TONY, 24 · PARIS</h4>
+            <p>Living in Paris is very different from back home, but I love my life here. I’m making basic French progress. I work for a British company, but I also love European work and have friends and colleagues from many countries in my office – my job is very exciting.</p>
+          </div>
+
+          <p style="margin-top:.6rem">Match:</p>
+          <p>1 is abroad for a short time and plans to return home → <select data-answer="Emma|emma">
+            <option value="">— choose —</option>
+            <option>Emma</option>
+            <option>Vanessa</option>
+            <option>Tony</option>
+          </select></p>
+          <p>2 works in IT and wants to stay a long time → <select data-answer="Vanessa|vanessa">
+            <option value="">— choose —</option>
+            <option>Emma</option>
+            <option>Vanessa</option>
+            <option>Tony</option>
+          </select></p>
+          <p>3 works for a British company and has international colleagues → <select data-answer="Tony|tony">
+            <option value="">— choose —</option>
+            <option>Emma</option>
+            <option>Vanessa</option>
+            <option>Tony</option>
+          </select></p>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/3</span>
+          </div>
+        </div>
+
+        <div class="exercise" data-ex="4b">
+          <div class="exercise-title"><span class="letter">b</span> Read again and choose the best endings.</div>
+          <p>1 Emma … <select data-answer="misses home">
+            <option value="">— choose —</option>
+            <option>has been in Mexico for three years</option>
+            <option>misses home</option>
+            <option>never travels outside Mexico City</option>
+          </select></p>
+          <p>2 Vanessa … <select data-answer="finds it easy to travel around Germany">
+            <option value="">— choose —</option>
+            <option>finds it easy to travel around Germany</option>
+            <option>has a very exciting job</option>
+            <option>plans to leave Berlin soon</option>
+          </select></p>
+          <p>3 Tony … <select data-answer="has colleagues from many countries">
+            <option value="">— choose —</option>
+            <option>doesn’t like living in Paris</option>
+            <option>works only with British people</option>
+            <option>has colleagues from many countries</option>
+          </select></p>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/3</span>
+          </div>
+        </div>
+
+        <div class="exercise" data-ex="4c">
+          <div class="exercise-title"><span class="letter">c</span> Write a short paragraph about the advantages and disadvantages of living and working abroad.</div>
+          <textarea rows="6" placeholder="Living and working abroad has many advantages. For example, … On the other hand, …" style="width:100%"></textarea>
+          <button type="button" class="ex-btn btn-write" onclick="checkWriting(this)">Check writing</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: Listening -->
+    <div class="slide" data-slide="4">
+      <div class="slide-inner">
+        <span class="page-tag">Listening · Track 1.6</span>
+        <div class="section-header"><span class="num">5</span><h2>Listening – Making friends</h2></div>
+
+        <div class="exercise">
+          <div class="exercise-title">Audio · Track 1.6</div>
+          <p style="font-size:.88rem;color:var(--muted);margin-bottom:.4rem">New students from Durham University talk about how they are making friends.</p>
+          <audio controls style="width:100%;max-width:420px;margin:.4rem 0" preload="metadata">
+            <source src="audio_1_6.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+
+        <div class="exercise" data-ex="L1">
+          <div class="exercise-title"><span class="letter">a</span> Listen and match 1–3 with the people.</div>
+          <p>1 joined a club to meet people with the same interests → <select data-answer="Ollie|ollie">
+            <option value="">— choose —</option>
+            <option>Ollie</option>
+            <option>Sophia</option>
+            <option>Ethan</option>
+          </select></p>
+          <p>2 posted a message on an online student network → <select data-answer="Sophia|sophia">
+            <option value="">— choose —</option>
+            <option>Ollie</option>
+            <option>Sophia</option>
+            <option>Ethan</option>
+          </select></p>
+          <p>3 knocked on bedroom doors in the student house → <select data-answer="Ethan|ethan">
+            <option value="">— choose —</option>
+            <option>Ollie</option>
+            <option>Sophia</option>
+            <option>Ethan</option>
+          </select></p>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/3</span>
+          </div>
+        </div>
+
+        <div class="exercise" data-ex="L2">
+          <div class="exercise-title"><span class="letter">b</span> Listen again. Are the sentences true (T) or false (F)?</div>
+          <ol>
+            <li>Ollie often goes to parties and bars. <select data-answer="F|false"><option value="">—</option><option>T</option><option>F</option></select></li>
+            <li>The walking club meets every Sunday. <select data-answer="T|true"><option value="">—</option><option>T</option><option>F</option></select></li>
+            <li>Sophia is studying drama. <select data-answer="T|true"><option value="">—</option><option>T</option><option>F</option></select></li>
+            <li>About ten people meet Sophia every Tuesday. <select data-answer="T|true"><option value="">—</option><option>T</option><option>F</option></select></li>
+            <li>Ethan likes using social media to make friends. <select data-answer="F|false"><option value="">—</option><option>T</option><option>F</option></select></li>
+            <li>Ethan lives with about thirty other students. <select data-answer="T|true"><option value="">—</option><option>T</option><option>F</option></select></li>
+          </ol>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/6</span>
+          </div>
+        </div>
+
+        <div class="exercise" data-ex="L3">
+          <div class="exercise-title"><span class="letter">c</span> Complete the notes about each person.</div>
+          <p><strong>Ollie</strong> – doesn’t like parties/bars · joined the university <input type="text" data-answer="walking club|walking" style="width:120px" placeholder="…"> · meets every <input type="text" data-answer="Sunday|sunday" style="width:90px" placeholder="…"></p>
+          <p><strong>Sophia</strong> – studying <input type="text" data-answer="drama" style="width:90px" placeholder="…"> · posted on an online student <input type="text" data-answer="network" style="width:90px" placeholder="…"> · meets for a drink every <input type="text" data-answer="Tuesday|tuesday" style="width:90px" placeholder="…"></p>
+          <p><strong>Ethan</strong> – doesn’t like social media · lives in a large student <input type="text" data-answer="house" style="width:80px" placeholder="…"> · knocked on everyone’s bedroom <input type="text" data-answer="door|doors" style="width:80px" placeholder="…"></p>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/7</span>
+          </div>
+        </div>
+
+        <div class="exercise">
+          <div class="exercise-title"><span class="letter">d</span> Discussion / writing</div>
+          <p>Which way of making friends do you think is best? Why? Have you ever used any of these methods?</p>
+          <textarea rows="4" placeholder="I think … is the best way because …" style="width:100%"></textarea>
+          <button type="button" class="ex-btn btn-write" onclick="checkWriting(this)">Check writing</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: Review progress -->
+    <div class="slide" data-slide="5">
+      <div class="slide-inner">
+        <span class="page-tag">Review your progress</span>
+        <div class="section-header"><span class="num">6</span><h2>Review your progress</h2></div>
+
+        <div class="exercise">
+          <div class="exercise-title">How well did you do in this unit?</div>
+          <p style="font-size:.88rem;color:var(--muted);margin-bottom:.5rem">Tick the things you can do. Rate 3 (very well), 2 (well) or 1 (not so well).</p>
+
+          <div class="can-do">
+            <input type="checkbox" id="can1">
+            <label for="can1">I can ask and answer personal questions</label>
+            <select style="width:60px;margin-left:auto"><option value="">—</option><option>3</option><option>2</option><option>1</option></select>
+          </div>
+          <div class="can-do">
+            <input type="checkbox" id="can2">
+            <label for="can2">I can talk about how I communicate</label>
+            <select style="width:60px;margin-left:auto"><option value="">—</option><option>3</option><option>2</option><option>1</option></select>
+          </div>
+          <div class="can-do">
+            <input type="checkbox" id="can3">
+            <label for="can3">I can meet people and end conversations</label>
+            <select style="width:60px;margin-left:auto"><option value="">—</option><option>3</option><option>2</option><option>1</option></select>
+          </div>
+          <div class="can-do">
+            <input type="checkbox" id="can4">
+            <label for="can4">I can write a personal email</label>
+            <select style="width:60px;margin-left:auto"><option value="">—</option><option>3</option><option>2</option><option>1</option></select>
+          </div>
+          <div class="can-do">
+            <input type="checkbox" id="can5">
+            <label for="can5">I can use present simple and present continuous correctly</label>
+            <select style="width:60px;margin-left:auto"><option value="">—</option><option>3</option><option>2</option><option>1</option></select>
+          </div>
+          <div class="can-do">
+            <input type="checkbox" id="can6">
+            <label for="can6">I can use <em>like / look like / sound like</em></label>
+            <select style="width:60px;margin-left:auto"><option value="">—</option><option>3</option><option>2</option><option>1</option></select>
+          </div>
+        </div>
+
+        <div class="exercise" data-ex="5a">
+          <div class="exercise-title"><span class="letter">a</span> Correct the mistakes in these sentences.</div>
+          <p>1 I can’t talk to you now because I do my homework. → <input type="text" data-answer="I can't talk to you now because I'm doing my homework.|I can’t talk to you now because I am doing my homework." style="width:100%" placeholder="Corrected sentence"></p>
+          <p>2 What kind of music you usually listen to? → <input type="text" data-answer="What kind of music do you usually listen to?" style="width:100%"></p>
+          <p>3 She speak English quite good. → <input type="text" data-answer="She speaks English quite well.|She speaks English quite good." style="width:100%"></p>
+          <p>4 I’m in salamanca, in spain. → <input type="text" data-answer="I'm in Salamanca, in Spain.|I’m in Salamanca, in Spain." style="width:100%"></p>
+          <p>5 We’re all from diferent countrys. → <input type="text" data-answer="We're all from different countries.|We’re all from different countries." style="width:100%"></p>
+          <div class="btn-row">
+            <button type="button" class="ex-btn btn-check" onclick="checkEx(this)">Check</button>
+            <button type="button" class="ex-btn btn-show" onclick="showEx(this)">Show</button>
+            <button type="button" class="ex-btn btn-clear" onclick="clearEx(this)">Clear</button>
+            <span class="score-pill" data-score>0/5</span>
+          </div>
+        </div>
+
+        <div class="exercise">
+          <div class="exercise-title"><span class="letter">b</span> Write questions and answers about what you do in your free time.</div>
+          <p style="font-size:.88rem;color:var(--muted)">Think about: Where do you spend your free time? What do you do and how often? Who do you spend your time with?</p>
+          <textarea rows="6" placeholder="Q: Where do you usually spend your free time?&#10;A: I usually …&#10;&#10;Q: How often do you …?&#10;A: …" style="width:100%"></textarea>
+          <button type="button" class="ex-btn btn-write" onclick="checkWriting(this)">Check writing</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /slides -->
+
+  <div class="slide-nav">
+    <button type="button" id="prevBtn" onclick="changeSlide(-1)">← Prev</button>
+    <span class="counter" id="slideCounter">1 / 5</span>
+    <button type="button" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+  </div>
+</main>
+
+<div id="modalOverlay">
+  <div class="modal">
+    <h3>Results Report</h3>
+    <p>Student: <strong id="reportName">—</strong></p>
+    <p>Overall: <strong id="reportTotal">0%</strong></p>
+    <div id="reportBody"></div>
+    <div class="modal-actions">
+      <button type="button" style="background:#3182ce;color:#fff" onclick="copyReport()">Copy summary</button>
+      <button type="button" style="background:#718096;color:#fff" onclick="closeReport()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="wordPopup">
+  <div class="wp-word" id="wpWord"></div>
+  <div class="wp-pos" id="wpPos"></div>
+  <div class="wp-def" id="wpDef"></div>
+  <div class="wp-ex" id="wpEx"></div>
+</div>
+
+<script>
+const LESSON_CODE = "U1REV";
+const LS_KEY = "empowerC1_" + LESSON_CODE;
+const PROGRESS_KEY = "empowerC1_lessonProgress";
+let currentSlide = 0;
+const totalSlides = 6;
+
+function normalize(s) {
+  return (s || "").toString().trim().toLowerCase()
+    .replace(/[\u2018\u2019\u201A\u201B']/g, "'")
+    .replace(/[\u201C\u201D\u201E\u201F"]/g, '"')
+    .replace(/[.,;:!?]+$/g, "").replace(/\s+/g, " ");
+}
+
+function isCorrect(user, answerAttr) {
+  if (!answerAttr) return false;
+  const alts = answerAttr.split("|").map(a => normalize(a));
+  const u = normalize(user);
+  return alts.some(a => u === a || (a.length > 3 && u.startsWith(a)) || (u.length > 3 && a.startsWith(u)));
+}
+
+function liveCheck(el) {
+  const ans = el.getAttribute("data-answer");
+  if (!ans) return;
+  const val = el.value || "";
+  if (!val) { el.classList.remove("live-ok", "live-bad", "ok", "bad"); return; }
+  if (isCorrect(val, ans)) { el.classList.add("live-ok"); el.classList.remove("live-bad"); }
+  else { el.classList.add("live-bad"); el.classList.remove("live-ok"); }
+}
+
+document.addEventListener("input", e => {
+  if (e.target.matches("input[data-answer], select[data-answer], textarea[data-answer]")) {
+    liveCheck(e.target); saveAll(); updateProgress();
+  }
+});
+document.addEventListener("change", e => {
+  if (e.target.matches("input[data-answer], select[data-answer]")) {
+    liveCheck(e.target); saveAll(); updateProgress();
+  }
+});
+
+function checkEx(btn) {
+  const ex = btn.closest(".exercise");
+  if (!ex) return;
+  let correct = 0, total = 0;
+  ex.querySelectorAll("[data-answer]").forEach(el => {
+    total++;
+    const val = el.value || "";
+    if (isCorrect(val, el.getAttribute("data-answer"))) {
+      correct++; el.classList.add("ok"); el.classList.remove("bad");
+    } else {
+      el.classList.add("bad"); el.classList.remove("ok");
+    }
+  });
+  const pill = ex.querySelector("[data-score]");
+  if (pill) pill.textContent = correct + "/" + total;
+  saveAll(); updateProgress();
+}
+
+function showEx(btn) {
+  const ex = btn.closest(".exercise");
+  if (!ex) return;
+  ex.querySelectorAll("[data-answer]").forEach(el => {
+    const ans = el.getAttribute("data-answer").split("|")[0];
+    if (el.tagName === "SELECT") {
+      Array.from(el.options).forEach(o => {
+        if (normalize(o.value) === normalize(ans) || normalize(o.text) === normalize(ans)) el.value = o.value;
+      });
+      if (!el.value) el.value = ans;
+    } else el.value = ans;
+    el.classList.add("ok"); el.classList.remove("bad", "live-bad");
+  });
+  checkEx(btn);
+}
+
+function clearEx(btn) {
+  const ex = btn.closest(".exercise");
+  if (!ex) return;
+  ex.querySelectorAll("input[data-answer], select[data-answer]").forEach(el => {
+    el.value = ""; el.classList.remove("ok", "bad", "live-ok", "live-bad");
+  });
+  const pill = ex.querySelector("[data-score]");
+  if (pill) pill.textContent = "0/" + ex.querySelectorAll("[data-answer]").length;
+  saveAll(); updateProgress();
+}
+
+function updateProgress() {
+  let correct = 0, total = 0;
+  document.querySelectorAll("[data-answer]").forEach(el => {
+    total++;
+    const val = el.value || "";
+    if (val && isCorrect(val, el.getAttribute("data-answer"))) correct++;
+  });
+  document.querySelectorAll("textarea:not([data-answer])").forEach(ta => {
+    if (ta.value.trim().length > 20) { total++; correct++; }
+  });
+  const pct = total ? Math.round(correct / total * 100) : 0;
+  document.getElementById("progressBar").style.width = pct + "%";
+  document.getElementById("progressPct").textContent = pct + "%";
+  try {
+    const all = JSON.parse(localStorage.getItem(PROGRESS_KEY) || "{}");
+    all[LESSON_CODE] = { pct, updated: new Date().toISOString() };
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(all));
+  } catch (e) {}
+}
+
+function saveAll() {
+  const data = { name: document.getElementById("studentName").value, slide: currentSlide, answers: {} };
+  document.querySelectorAll("input, select, textarea").forEach((el, i) => {
+    if (el.id === "studentName") return;
+    const key = el.name || el.id || ("f" + i);
+    if (el.type === "checkbox") { if (el.checked) data.answers[key] = "1"; }
+    else data.answers[key] = el.value;
+  });
+  try { localStorage.setItem(LS_KEY, JSON.stringify(data)); } catch (e) {}
+}
+
+function loadAll() {
+  try {
+    const data = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
+    if (data.name) document.getElementById("studentName").value = data.name;
+    if (data.answers) {
+      document.querySelectorAll("input, select, textarea").forEach((el, i) => {
+        if (el.id === "studentName") return;
+        const key = el.name || el.id || ("f" + i);
+        if (data.answers[key] !== undefined) {
+          if (el.type === "checkbox") el.checked = !!data.answers[key];
+          else el.value = data.answers[key];
+        }
+      });
+    }
+    if (typeof data.slide === "number") goSlide(data.slide);
+  } catch (e) {}
+  updateProgress();
+}
+
+document.getElementById("studentName").addEventListener("input", saveAll);
+
+function goSlide(n) {
+  currentSlide = Math.max(0, Math.min(totalSlides - 1, n));
+  document.querySelectorAll(".slide").forEach((s, i) => s.classList.toggle("active", i === currentSlide));
+  document.querySelectorAll(".nav-link").forEach((a, i) => a.classList.toggle("active", i === currentSlide));
+  document.getElementById("slideCounter").textContent = (currentSlide + 1) + " / " + totalSlides;
+  document.getElementById("prevBtn").disabled = currentSlide === 0;
+  document.getElementById("nextBtn").disabled = currentSlide === totalSlides - 1;
+  document.getElementById("topTitle").textContent = "Unit 1 · " + ["Grammar", "Vocabulary", "Wordpower: like", "Reading Extension", "Listening", "Review Progress"][currentSlide];
+  saveAll();
+}
+function changeSlide(d) { goSlide(currentSlide + d); }
+document.querySelectorAll(".nav-link").forEach(a => {
+  a.addEventListener("click", () => goSlide(parseInt(a.dataset.slide, 10)));
+});
+
+const sidebar = document.getElementById("sidebar");
+const backdrop = document.getElementById("sidebarBackdrop");
+document.getElementById("menuBtn").addEventListener("click", () => {
+  sidebar.classList.toggle("open");
+  backdrop.classList.toggle("show");
+});
+backdrop.addEventListener("click", () => {
+  sidebar.classList.remove("open");
+  backdrop.classList.remove("show");
+});
+
+function openReport() {
+  const name = document.getElementById("studentName").value || "—";
+  document.getElementById("reportName").textContent = name;
+  let html = "<table><thead><tr><th>Exercise</th><th>Score</th></tr></thead><tbody>";
+  let grandC = 0, grandT = 0;
+  document.querySelectorAll(".exercise[data-ex]").forEach(ex => {
+    const id = ex.getAttribute("data-ex");
+    let c = 0, t = 0;
+    ex.querySelectorAll("[data-answer]").forEach(el => {
+      t++;
+      if (el.value && isCorrect(el.value, el.getAttribute("data-answer"))) c++;
+    });
+    if (t === 0) return;
+    grandC += c; grandT += t;
+    html += `<tr><td>${id}</td><td>${c}/${t}</td></tr>`;
+  });
+  html += "</tbody></table>";
+  document.getElementById("reportBody").innerHTML = html;
+  const pct = grandT ? Math.round(grandC / grandT * 100) : 0;
+  document.getElementById("reportTotal").textContent = pct + "% (" + grandC + "/" + grandT + ")";
+  document.getElementById("modalOverlay").classList.add("show");
+  window._lastReportText = `Empower Unit 1 Review – Results\nName: ${name}\nOverall: ${pct}% (${grandC}/${grandT})\n`;
+}
+function closeReport() { document.getElementById("modalOverlay").classList.remove("show"); }
+function copyReport() {
+  if (window._lastReportText) navigator.clipboard.writeText(window._lastReportText).then(() => alert("Copied!"));
+}
+document.getElementById("resultsBtn").addEventListener("click", openReport);
+
+function checkWriting(btn) {
+  const ta = btn.closest(".exercise")?.querySelector("textarea");
+  if (!ta) { alert("No text area found."); return; }
+  const text = ta.value.trim();
+  if (!text) { alert("Write something first."); return; }
+  let panel = ta.parentElement.querySelector(".wf-panel");
+  if (!panel) {
+    panel = document.createElement("div");
+    panel.className = "wf-panel";
+    ta.parentElement.appendChild(panel);
+  }
+  panel.classList.add("show");
+  panel.innerHTML = "Checking…";
+  btn.disabled = true;
+  fetch("https://api.languagetool.org/v2/check", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: "language=en-GB&text=" + encodeURIComponent(text)
+  })
+  .then(r => r.json())
+  .then(data => {
+    btn.disabled = false;
+    const issues = (data.matches || []).map(m => ({
+      what: m.message,
+      why: (m.rule && m.rule.description) || "",
+      try: (m.replacements || []).slice(0, 3).map(r => r.value)
+    }));
+    if (!issues.length) {
+      panel.innerHTML = '<strong style="color:var(--ok)">Looking good!</strong> No major issues found.';
+      return;
+    }
+    panel.innerHTML = issues.map(is => {
+      const tries = (is.try || []).map(t => `<span class="try">${t}</span>`).join(" · ");
+      return `<div class="wf-issue"><div class="what">${is.what}</div>${is.why ? `<div class="why">${is.why}</div>` : ""}${tries ? `<div>Try: ${tries}</div>` : ""}</div>`;
+    }).join("");
+  })
+  .catch(() => {
+    btn.disabled = false;
+    panel.innerHTML = "Could not check writing (needs internet).";
+  });
+}
+
+loadAll();
+goSlide(currentSlide);
+updateProgress();
+</script>
+</body>
+</html>
